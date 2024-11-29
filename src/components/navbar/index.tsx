@@ -5,10 +5,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  MagnifyingGlassIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
-import { Input } from "@/components/ui/input";
 import Search from "./search";
 import MobileMenu from "./mobile-menu";
 
@@ -16,7 +14,7 @@ export default function Navbar() {
   const menu = [
     {
       id: 1,
-      path: "/",
+      path: "/all",
       title: "All",
     },
     {
@@ -42,12 +40,14 @@ export default function Navbar() {
           </Suspense>
         </div>
         <div className="flex items-center gap-3 md:w-1/3">
-          <Button variant={"outline"} className="rounded-md p-3">
-            <Image src={"../logo.svg"} alt="logo" width={15} height={20} />
-          </Button>
-          <div className="text-sm font-bold uppercase ml-auto md:hidden lg:block md:ml-0">
-            ACME STORE
-          </div>
+          <Link href={"/"} className="flex items-center gap-3">
+            <Button variant={"outline"} className="rounded-md p-3">
+              <Image src={"../logo.svg"} alt="logo" width={15} height={20} />
+            </Button>
+            <div className="text-sm font-bold uppercase ml-auto md:hidden lg:block md:ml-0">
+              ACME STORE
+            </div>
+          </Link>
           {menu.length ? (
             <ul className="text-sm gap-6 hidden justify-center md:flex md:items-center">
               {menu.map((item, index) => (

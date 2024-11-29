@@ -1,9 +1,10 @@
 "use client";
 import { ThreeItemGrid } from "@/components/grid/three-items";
 import Carousel from "@/components/carousel";
+import { useState } from "react";
 
 export default function Home() {
-  const items = [
+  const data = [
     {
       id: 1,
       title: "Acme Circles T-Shirt",
@@ -32,9 +33,10 @@ export default function Home() {
       size: "half",
     },
   ];
+  const [items, setItems] = useState(data);
   return (
     <div className="w-full h-full">
-      <ThreeItemGrid />
+      <ThreeItemGrid items={items} />
       <Carousel /> 
     </div>
   );
