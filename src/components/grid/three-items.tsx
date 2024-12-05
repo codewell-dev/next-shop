@@ -14,7 +14,7 @@ export function ThreeItemGridItem({
   return (
     <div
       className={
-        size === "full"
+        size == 0
           ? "md:col-span-4 md:row-span-2"
           : "md:col-span-2 md:row-span-1"
       }
@@ -39,17 +39,16 @@ export function ThreeItemGridItem({
 export function ThreeItemGrid({items}: any) {
   return (
     <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 pb-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">
-      {items?.map((item: any) => (
+      {items?.map((item: any, index: any) => (
         <Fragment key={item.id}>
           <ThreeItemGridItem
             key={item.id}
             id={item.id}
             title={item.title}
-            path={item.path}
+            path={item.images[0]}
             price={item.price}
-            imgSize={item.imgSize}
             position={item.position}
-            size={item.size}
+            size={index}
           />
         </Fragment>
       ))}

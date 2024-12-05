@@ -4,17 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  ShoppingCartIcon,
-} from "@heroicons/react/24/outline";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
 import MobileMenu from "./mobile-menu";
+import { ProviderSheet } from "../provider-sheet";
+import BasketCart from "../basket-cart";
+import { useAppSelector } from "@/lib/hooks";
+import { addQuantity, deleteProduct, deleteQuantity } from "@/lib/slices/cartSlice";
 
 export default function Navbar() {
   const menu = [
     {
       id: 1,
-      path: "/all",
+      path: "/search",
       title: "All",
     },
     {
@@ -26,6 +28,34 @@ export default function Navbar() {
       id: 3,
       path: "/stickers",
       title: "Stickers",
+    },
+  ];
+  const cart = useAppSelector((state) => state.cart);
+  console.log(cart, "cart");
+  const data = [
+    {
+      id: 1,
+      title: "Acme Circles T-Shirt",
+      path: "../main-shirt.svg",
+      price: "$20.00",
+      count: 1,
+      size: "M",
+    },
+    {
+      id: 2,
+      title: "Acme Drawstring Bag",
+      path: "../main-bag.svg",
+      price: "$12.00",
+      count: 1,
+      size: "M",
+    },
+    {
+      id: 3,
+      title: "Acme Cup",
+      path: "../main-cup.svg",
+      price: "$15.00",
+      count: 1,
+      size: "M",
     },
   ];
   return (
@@ -50,7 +80,7 @@ export default function Navbar() {
           </Link>
           {menu.length ? (
             <ul className="text-sm gap-6 hidden justify-center md:flex md:items-center">
-              {menu.map((item, index) => (
+              {menu.map((item) => (
                 <li key={item.id}>
                   <Link
                     href={item.path}
@@ -67,9 +97,21 @@ export default function Navbar() {
           <Search />
         </div>
         <div className="flex md:w-1/3">
-          <Button variant={"outline"} className="ml-auto">
-            <ShoppingCartIcon />
-          </Button>
+          <ProviderSheet>
+            {cart.map((i) => (
+              <BasketCart
+                key={i.id}
+                id={i.id}
+                title={i.title}
+                price={i.price}
+                imgSrc={i.images[0]}
+                count={i.quantity}
+                addQuantity={addQuantity}
+                deleteQuantity={deleteQuantity}
+                deleteProduct={deleteProduct}
+              />
+            ))}
+          </ProviderSheet>
         </div>
       </nav>
     </header>

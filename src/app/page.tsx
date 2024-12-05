@@ -1,43 +1,23 @@
 "use client";
 import { ThreeItemGrid } from "@/components/grid/three-items";
 import Carousel from "@/components/carousel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetProductByIdQuery, useGetProductsQuery } from "@/lib/products";
+import { Progress } from "@/components/ui/progress";
+import Spinner from "@/components/spinner";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { addProduct } from "@/lib/slices/cartSlice";
 
 export default function Home() {
-  const data = [
-    {
-      id: 1,
-      title: "Acme Circles T-Shirt",
-      path: "../main-shirt.svg",
-      price: "$20.00 USD",
-      imgSize: { height: 600, width: 800 },
-      position: "center",
-      size: "full",
-    },
-    {
-      id: 2,
-      title: "Acme Drawstring Bag",
-      path: "../main-bag.svg",
-      price: "$12.00USD",
-      imgSize: { height: 300, width: 350 },
-      position: "bottom",
-      size: "half",
-    },
-    {
-      id: 3,
-      title: "Acme Cup",
-      path: "../main-cup.svg",
-      price: "$15.00USD",
-      imgSize: { height: 300, width: 350 },
-      position: "bottom",
-      size: "half",
-    },
-  ];
-  const [items, setItems] = useState(data);
+  const { data: dataThree, error: errorThree, isLoading: isLoadingThree } = useGetProductsQuery("3");
+  const { data: dataCarousel, error: errorCarousel, isLoading: isLoadingCarousel } = useGetProductsQuery("15");
+  const count = useAppSelector(state => state)
+  const dispatch = useAppDispatch()
   return (
     <div className="w-full h-full">
-      <ThreeItemGrid items={items} />
-      <Carousel /> 
+      {isLoadingThree && isLoadingCarousel && <Spinner />}
+      <ThreeItemGrid items={dataThree?.products} />
+      <Carousel items={dataCarousel?.products} />
     </div>
   );
 }
