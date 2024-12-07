@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import GridTileImage from "./grid/grid-tile-images";
 import { changeActiveImgMinus, changeActiveImgPlus } from "@/lib/utils";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Spinner from "./spinner";
 
-export default function Gallery({item}: any) {
-    const searchParams = useSearchParams();
-    const imageParamsId = Number(searchParams.get("image"))
-    const [activeImage, setActiveImage] = useState<any>(imageParamsId || 0)
-    
-    useEffect(() => {
-      setActiveImage(imageParamsId)
-    }, [searchParams])
+export default function Gallery({ item }: any) {
+  const searchParams = useSearchParams();
+  const imageParamsId = Number(searchParams.get("image"));
+  const [activeImage, setActiveImage] = useState<any>(imageParamsId || 0);
 
-    if (!item) {
-      return <Spinner />
-    }
+  useEffect(() => {
+    setActiveImage(imageParamsId);
+  }, [searchParams]);
+
+  if (!item) {
+    return <Spinner />;
+  }
   return (
     <div className="relative w-full h-[800px] flex justify-center items-center flex-col pt-10">
       <div className="w-[600px] h-[500px] relative p-3">
@@ -49,18 +49,19 @@ export default function Gallery({item}: any) {
         </div>
       </div>
       <div className="mt-5 flex gap-2">
-        {item.images.map((i: any, index: any) => (
-          <div
-            className={`w-24 h-24 border-neutral-400 border-2 rounded-lg ${
-              index == activeImage && "border-blue-600"
-            }`}
-            key={index}
-          >
-            <Link href={`/product/${item.id}?image=${index}`} prefetch={true}>
-              <GridTileImage imgSrc={i} label={false} />
-            </Link>
-          </div>
-        ))}
+
+          {item.images.map((i: any, index: any) => (
+            <div
+              className={`w-24 h-24  border-2 rounded-lg  ${
+                index == activeImage ? `border-blue-600` : `border-neutral-400`
+              }`}
+              key={index}
+            >
+              <Link href={`/product/${item.id}?image=${index}`} prefetch={true}>
+                <GridTileImage imgSrc={i} label={false} />
+              </Link>
+            </div>
+          ))}
       </div>
     </div>
   );

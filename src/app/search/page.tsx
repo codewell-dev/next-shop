@@ -1,116 +1,34 @@
 "use client";
 
 import GridTileImage from "@/components/grid/grid-tile-images";
+import Spinner from "@/components/spinner";
+import {
+  useGetCategoryByNameQuery,
+  useGetCategoryListQuery,
+  useGetProductsQuery,
+} from "@/lib/products";
 import Link from "next/link";
-import { title } from "process";
-import React from "react";
+import { useSearchParams } from "next/navigation";
+import React, { Suspense } from "react";
 
 export default function Page() {
-    const items = [
-        {
-          id: 1,
-          title: "Acme Circles T-Shirt",
-          path: "./main-shirt.svg",
-          price: "$20.00 USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 2,
-          title: "Acme Drawstring Bag",
-          path: "./main-bag.svg",
-          price: "$12.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 3,
-          title: "Acme Cup",
-          path: "./main-cup.svg",
-          price: "$15.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 4,
-          title: "Acme Circles T-Shirt",
-          path: "./main-shirt.svg",
-          price: "$20.00 USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 5,
-          title: "Acme Drawstring Bag",
-          path: "./main-bag.svg",
-          price: "$12.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 6,
-          title: "Acme Cup",
-          path: "./main-cup.svg",
-          price: "$15.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 7,
-          title: "Acme Circles T-Shirt",
-          path: "./main-shirt.svg",
-          price: "$20.00 USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 8,
-          title: "Acme Drawstring Bag",
-          path: "./main-bag.svg",
-          price: "$12.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-        {
-          id: 9,
-          title: "Acme Cup",
-          path: "./main-cup.svg",
-          price: "$15.00USD",
-          imgSize: { height: 300, width: 350 },
-          position: "bottom",
-          size: "",
-        },
-      ];
-  const collections = [
-    {
-      id: 1,
-      title: "All",
-      path: "/",
-    },
-    {
-      id: 2,
-      title: "Bags",
-      path: "/",
-    },
-    {
-      id: 3,
-      title: "Drinkware",
-      path: "/",
-    },
-    {
-      id: 4,
-      title: "Electronics",
-      path: "/",
-    },
-  ];
+  const {
+    data: dataProducts,
+    error: errorProducts,
+    isLoading: isLoadingProducts,
+  } = useGetProductsQuery("9");
+  const {
+    data: dataCategories,
+    error: errorCategories,
+    isLoading: isLoadingCategories,
+  } = useGetCategoryListQuery("");
+  const searchParams = useSearchParams();
+  const categoryName: any = searchParams.get("category");
+  const {
+    data: dataCategory,
+    error: errorCategory,
+    isLoading: isLoadingCategory,
+  } = useGetCategoryByNameQuery(categoryName);
 
   const sortby = [
     {
@@ -134,41 +52,60 @@ export default function Page() {
       path: "/",
     },
   ];
+  if (!dataProducts && !dataCategories) {
+    return <Spinner />;
+  }
   return (
     <div className="category min-h-screen">
-      <div className="mx-auto max-w-screen-2xl flex justify-between ">
+      <div className="mx-auto max-w-screen-2xl flex justify-between p-4 lg:px-6 ">
         <div className="flex justify-between w-full">
-          <div className="category_left w-36">
+          <div className="category_left w-48">
             <p className="text-neutral-500 text-sm">Collections</p>
             <div className="flex flex-col">
-              {collections.map((i) => (
+              {dataCategories?.map((i, index) => (
                 <Link
-                  href={i.path}
-                  key={i.id}
-                  className="text-sm hover:underline my-0.5"
+                  href={`/search?category=${i}`}
+                  key={index}
+                  className={`text-sm my-1 uppercase w-fit border-b hover:border-neutral-600 ${i == categoryName ? `border-neutral-600` : `border-transparent`}`}
                 >
-                  {i.title}
+                  {i}
                 </Link>
               ))}
             </div>
           </div>
           <div className="w-full">
-            <div className="flex flex-wrap gap-4 justify-center items-center mx-auto">
-              {items.map((i: any) => (
-                <Link href={`/product/${i.path}`}
-                  className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
-                  key={i.id}
-                >
-                  <GridTileImage
-                    imgSrc={i.path}
-                    title={i.title}
-                    position={i.position}
-                    size={i.size}
-                    price={i.price}
-                    id={i.id}
-                  />
-                </Link>
-              ))}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Suspense fallback={<Spinner />}>
+                {!categoryName
+                  ? dataProducts?.products.map((i: any) => (
+                      <Link
+                        href={`/product/${i.id}`}
+                        className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
+                        key={i.id}
+                      >
+                        <GridTileImage
+                          imgSrc={i.images[0]}
+                          title={i.title}
+                          price={i.price}
+                          id={i.id}
+                        />
+                      </Link>
+                    ))
+                  : dataCategory?.products.map((i: any) => (
+                      <Link
+                        href={`/product/${i.id}`}
+                        className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
+                        key={i.id}
+                      >
+                        <GridTileImage
+                          imgSrc={i.images[0]}
+                          title={i.title}
+                          price={i.price}
+                          id={i.id}
+                        />
+                      </Link>
+                    ))}
+              </Suspense>
             </div>
           </div>
           <div className="category_right w-36">

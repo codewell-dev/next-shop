@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
@@ -10,28 +10,40 @@ import MobileMenu from "./mobile-menu";
 import { ProviderSheet } from "../provider-sheet";
 import BasketCart from "../basket-cart";
 import { useAppSelector } from "@/lib/hooks";
-import { addQuantity, deleteProduct, deleteQuantity } from "@/lib/slices/cartSlice";
+import { useDispatch } from "react-redux";
+import { getAllData } from "@/lib/slices/cartSlice";
 
 export default function Navbar() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllData())
+  }, []);
   const menu = [
     {
       id: 1,
+      quantity: 2,
       path: "/search",
       title: "All",
     },
     {
       id: 2,
+      quantity: 2,
       path: "/shirts",
       title: "Shirts",
     },
     {
       id: 3,
+      quantity: 2,
       path: "/stickers",
       title: "Stickers",
     },
   ];
   const cart = useAppSelector((state) => state.cart);
-  console.log(cart, "cart");
+  let totalPrice =
+    cart.length > 0
+      ? cart.reduce((a, b: any) => a + b.price * b.quantity, 0)
+      : '0,00';
+
   const data = [
     {
       id: 1,
@@ -97,21 +109,7 @@ export default function Navbar() {
           <Search />
         </div>
         <div className="flex md:w-1/3">
-          <ProviderSheet>
-            {cart.map((i) => (
-              <BasketCart
-                key={i.id}
-                id={i.id}
-                title={i.title}
-                price={i.price}
-                imgSrc={i.images[0]}
-                count={i.quantity}
-                addQuantity={addQuantity}
-                deleteQuantity={deleteQuantity}
-                deleteProduct={deleteProduct}
-              />
-            ))}
-          </ProviderSheet>
+          <ProviderSheet cart={cart} totalPrice={totalPrice} cartTotal={cart.length} />
         </div>
       </nav>
     </header>

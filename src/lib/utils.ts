@@ -19,3 +19,15 @@ export function changeActiveImgPlus (index: number, setActiveImage: any, item: a
     setActiveImage(index + 1)
   }
 }
+
+export function priceCounts(quantity: any, price: any) {
+  if(quantity == 1) {
+    return price.toString().slice(0,5)
+  } else {
+    let newPrice: any = price * quantity
+    return newPrice.toString().slice(0,5)
+  }
+} 
+export function LocalStorageSet(state: any) {
+  localStorage.setItem("cart", JSON.stringify(state));
+}

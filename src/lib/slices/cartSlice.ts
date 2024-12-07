@@ -1,43 +1,69 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Product } from "../interfaces";
+import { LocalStorageSet } from "../utils";
 
 const cartSlice = createSlice({
   name: "carts",
   initialState: [] as Product[],
   reducers: {
     addProduct: (state, action: PayloadAction<any>) => {
-      const product: any = state.find((i: any) => i.id === action.payload.id)
+      const product: any = state.find((i: any) => i.id === action.payload.id);
       if (product) {
-        product.quantity += 1
+        product.quantity += 1;
       } else {
         const product = {
-          ...action.payload, quantity: 1
-        }
+          ...action.payload,
+          quantity: 1,
+        };
+
         state.push(product);
+        LocalStorageSet(current(state))
       }
     },
     deleteProduct: (state, action: PayloadAction<any>) => {
-      return state.filter(i => i.id !== action.payload)
+      const newState = state.filter((i) => i.id !== action.payload);
+      LocalStorageSet(newState)
+      return newState
     },
     addQuantity: (state: any, action) => {
-      const item = state.find((i: any) => i.id === action.payload)
-      if (item) {
-        item.quantity += 1
+      const newState = state.find((i: any) => i.id === action.payload);
+      if (newState) {
+        newState.quantity += 1;
       }
+      LocalStorageSet(current(state))
+
     },
     deleteQuantity: (state: any, action) => {
-      const item = state.find((i: any) => i.id === action.payload)
+      const item = state.find((i: any) => i.id === action.payload);
       if (item.quantity == 1) {
-        return state.filter((i: any) => i.id !== item.id)
+        let newState = state.filter((i: any) => i.id !== item.id);
+        LocalStorageSet(newState)
       } else {
-        item.quantity -= 1
+        item.quantity -= 1;
+        LocalStorageSet(current(state))
+      }
+    },
+    getAllData: (state: any) => {
+      const from_localStorage: any = window.localStorage.getItem("cart");
+      if (from_localStorage) {
+        const from_localStorageParse: any = JSON.parse(from_localStorage);
+        return state = from_localStorageParse;
+      } else if (
+        from_localStorage === null ||
+        from_localStorage === undefined
+      ) {
+        LocalStorageSet([].toString())
       }
     },
   },
 });
 
-export const { addProduct, deleteProduct, addQuantity, deleteQuantity } = cartSlice.actions;
+export const {
+  addProduct,
+  deleteProduct,
+  addQuantity,
+  deleteQuantity,
+  getAllData,
+} = cartSlice.actions;
 export default cartSlice.reducer;
-
-
