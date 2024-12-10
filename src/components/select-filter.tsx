@@ -9,24 +9,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Router } from "lucide-react";
 
 export function SelectFilter({ items }: { items: string[] }) {
-    const searchParams = useSearchParams();
-    const pathname = usePathname()
-    const router = useRouter()
+    // const searchParams = useSearchParams();
+    // const pathname = usePathname()
+    // const router = useRouter()
 
-    const createQueryString = React.useCallback(
-        (name: string, value: string) => {
-          const params = new URLSearchParams(searchParams.toString())
-          params.set(name, value)
+    // const createQueryString = React.useCallback(
+    //     (name: string, value: string) => {
+    //       const params = new URLSearchParams(searchParams.toString())
+    //       params.set(name, value)
      
-          return params.toString()
-        },
-        [searchParams]
-      )
+    //       return params.toString()
+    //     },
+    //     [searchParams]
+    //   )
+    // onValueChange={e => router.push(pathname + '?' + createQueryString('category', e))}
+    // defaultValue={items[0]} 
   return (
-    <Select defaultValue={items[0]} onValueChange={e => router.push(pathname + '?' + createQueryString('category', e))}>
+    <Select>
       <SelectTrigger className="w-full py-2 md:hidden mt-5">
         <SelectValue />
       </SelectTrigger>
