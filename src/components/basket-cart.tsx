@@ -13,7 +13,17 @@ export default function BasketCart({
   addQuantity,
   deleteQuantity,
   deleteProduct,
-}: any) {
+}: {
+  title: string;
+  price: number;
+  quantity: number | undefined;
+  imgSrc: string;
+  size: number;
+  id: number;
+  addQuantity: any;
+  deleteQuantity: any;
+  deleteProduct: any;
+}) {
   const dispatch = useAppDispatch();
   return (
     <div className="flex justify-between mt-3 border-b border-neutral-400 py-3">

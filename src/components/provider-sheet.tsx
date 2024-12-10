@@ -1,20 +1,14 @@
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
-  MinusCircleIcon,
-  MinusIcon,
-  PlusIcon,
   ShoppingCartIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import BasketCart from "./basket-cart";
 import {
@@ -30,13 +24,14 @@ export function ProviderSheet({
   cartTotal,
 }: {
   cart: Product[];
-  totalPrice: number;
+  totalPrice: number | string;
   cartTotal: number;
 }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={"outline"} className="ml-auto font-extrabold">
+        <Button variant={"outline"} className="ml-auto font-ext
+        rabold">
           {cartTotal} <ShoppingCartIcon />
         </Button>
       </SheetTrigger>
@@ -45,10 +40,11 @@ export function ProviderSheet({
           <SheetTitle>My Cart</SheetTitle>
         </SheetHeader>
         <div className="mt-4 flex-1">
-          {cart?.map((i: any, index: any) => (
+          {cart?.map((i: Product, index: number) => (
             <BasketCart
               key={index}
               id={i.id}
+              size={i.weight}
               title={i.title}
               price={i.price}
               imgSrc={i.images[0]}

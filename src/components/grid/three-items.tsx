@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import GridTileImage from "./grid-tile-images";
 import Link from "next/link";
 import { Product } from "@/lib/interfaces";

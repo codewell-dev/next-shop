@@ -69,7 +69,7 @@ export default function Page() {
           <div className="category_left w-48 md:block hidden">
             <p className="text-neutral-500 text-sm">Collections</p>
             <div className="flex flex-col">
-              {dataCategories?.map((i: any, index: any) => (
+              {dataCategories?.map((i: string, index: number) => (
                 <Link
                   href={`/search?category=${i}`}
                   key={index}
