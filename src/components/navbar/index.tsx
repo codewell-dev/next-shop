@@ -4,36 +4,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
 import MobileMenu from "./mobile-menu";
 import { ProviderSheet } from "../provider-sheet";
-import BasketCart from "../basket-cart";
-import { useAppSelector } from "@/lib/hooks";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getAllData } from "@/lib/slices/cartSlice";
+import { Menu } from "@/lib/interfaces";
 
 export default function Navbar() {
-  const dispatch = useDispatch()
+
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getAllData())
+    dispatch(getAllData());
   }, []);
-  const menu = [
+  const menu: Menu[] = [
     {
       id: 1,
-      quantity: 2,
       path: "/search",
       title: "All",
     },
     {
       id: 2,
-      quantity: 2,
       path: "/shirts",
       title: "Shirts",
     },
     {
       id: 3,
-      quantity: 2,
       path: "/stickers",
       title: "Stickers",
     },
@@ -42,34 +38,7 @@ export default function Navbar() {
   let totalPrice =
     cart.length > 0
       ? cart.reduce((a, b: any) => a + b.price * b.quantity, 0)
-      : '0,00';
-
-  const data = [
-    {
-      id: 1,
-      title: "Acme Circles T-Shirt",
-      path: "../main-shirt.svg",
-      price: "$20.00",
-      count: 1,
-      size: "M",
-    },
-    {
-      id: 2,
-      title: "Acme Drawstring Bag",
-      path: "../main-bag.svg",
-      price: "$12.00",
-      count: 1,
-      size: "M",
-    },
-    {
-      id: 3,
-      title: "Acme Cup",
-      path: "../main-cup.svg",
-      price: "$15.00",
-      count: 1,
-      size: "M",
-    },
-  ];
+      : "0,00";
   return (
     <header className="">
       <nav
@@ -109,7 +78,11 @@ export default function Navbar() {
           <Search />
         </div>
         <div className="flex md:w-1/3">
-          <ProviderSheet cart={cart} totalPrice={totalPrice} cartTotal={cart.length} />
+          <ProviderSheet
+            cart={cart}
+            totalPrice={totalPrice}
+            cartTotal={cart.length}
+          />
         </div>
       </nav>
     </header>

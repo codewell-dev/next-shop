@@ -1,29 +1,39 @@
 "use client";
 
 import GridTileImage from "@/components/grid/grid-tile-images";
+import { SelectFilter } from "@/components/select-filter";
 import Spinner from "@/components/spinner";
+import { Product, Products } from "@/lib/interfaces";
 import {
   useGetCategoryByNameQuery,
   useGetCategoryListQuery,
   useGetProductsQuery,
 } from "@/lib/products";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { Suspense } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import React, { Suspense, useCallback } from "react";
 
 export default function Page() {
   const {
     data: dataProducts,
     error: errorProducts,
     isLoading: isLoadingProducts,
-  } = useGetProductsQuery("9");
+  } = useGetProductsQuery<{
+    data: Products;
+    error: string;
+    isLoading: Boolean;
+  }>("9");
   const {
     data: dataCategories,
     error: errorCategories,
     isLoading: isLoadingCategories,
-  } = useGetCategoryListQuery("");
+  } = useGetCategoryListQuery<{
+    data: string[];
+    error: string;
+    isLoading: Boolean;
+  }>("");
   const searchParams = useSearchParams();
-  const categoryName: any = searchParams.get("category");
+  const categoryName: string | null = searchParams.get("category");
   const {
     data: dataCategory,
     error: errorCategory,
@@ -52,32 +62,39 @@ export default function Page() {
       path: "/",
     },
   ];
-  if (!dataProducts && !dataCategories) {
+  if (isLoadingCategories && isLoadingCategory) {
     return <Spinner />;
   }
+  
   return (
     <div className="category min-h-screen">
       <div className="mx-auto max-w-screen-2xl flex justify-between p-4 lg:px-6 ">
-        <div className="flex justify-between w-full">
-          <div className="category_left w-48">
+        <div className="flex flex-col md:flex-row md:justify-between w-full">
+          <div className="category_left w-48 md:block hidden">
             <p className="text-neutral-500 text-sm">Collections</p>
             <div className="flex flex-col">
-              {dataCategories?.map((i, index) => (
+              {dataCategories?.map((i: any, index: any) => (
                 <Link
                   href={`/search?category=${i}`}
                   key={index}
-                  className={`text-sm my-1 uppercase w-fit border-b hover:border-neutral-600 ${i == categoryName ? `border-neutral-600` : `border-transparent`}`}
+                  className={`text-sm my-1 uppercase w-fit border-b hover:border-neutral-600 ${
+                    i == categoryName
+                      ? `border-neutral-600`
+                      : `border-transparent`
+                  }`}
                 >
                   {i}
                 </Link>
               ))}
             </div>
           </div>
-          <div className="w-full">
+          <SelectFilter items={dataCategories} />
+          {/* <SelectFilter items={dataCategories} /> */}
+          <div className="w-full z-0 mt-10">
             <div className="flex flex-wrap gap-4 justify-center">
               <Suspense fallback={<Spinner />}>
                 {!categoryName
-                  ? dataProducts?.products.map((i: any) => (
+                  ? dataProducts?.products.map((i: Product) => (
                       <Link
                         href={`/product/${i.id}`}
                         className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
@@ -91,7 +108,7 @@ export default function Page() {
                         />
                       </Link>
                     ))
-                  : dataCategory?.products.map((i: any) => (
+                  : dataCategory?.products.map((i: Product) => (
                       <Link
                         href={`/product/${i.id}`}
                         className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
@@ -108,7 +125,7 @@ export default function Page() {
               </Suspense>
             </div>
           </div>
-          <div className="category_right w-36">
+          <div className="category_right w-36 md:block hidden">
             <p className="text-neutral-500 text-sm">Collections</p>
             <div className="flex flex-col">
               {sortby.map((i) => (

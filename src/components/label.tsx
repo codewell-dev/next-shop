@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-export function Label({position, title, price}: any): any {
+export function Label({position, title, price}: {position: string, title: string, price: number}): any {
 
     return <div className={clsx(`absolute left-20 ${position == 'center' ? 'left-10' : 'left-5 bottom-5'}`)}>
         <div className="p-1 border text-xs border-neutral-200 rounded-3xl flex items-center font-medium">

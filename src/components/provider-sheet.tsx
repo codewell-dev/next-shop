@@ -16,17 +16,23 @@ import {
   ShoppingCartIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import GridTileImage from "./grid/grid-tile-images";
-import { useState } from "react";
 import BasketCart from "./basket-cart";
 import {
   addQuantity,
   deleteProduct,
   deleteQuantity,
 } from "@/lib/slices/cartSlice";
-import { useAppSelector } from "@/lib/hooks";
+import { Product } from "@/lib/interfaces";
 
-export function ProviderSheet({ cart, totalPrice, cartTotal }: any) {
+export function ProviderSheet({
+  cart,
+  totalPrice,
+  cartTotal,
+}: {
+  cart: Product[];
+  totalPrice: number;
+  cartTotal: number;
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild>

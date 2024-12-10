@@ -9,13 +9,13 @@ export const productsApi = createApi({
     getProducts: builder.query<Products, string>({
       query: (limit) => `products?limit=${limit}`,
     }),
-    getProductById: builder.query<Product, any>({
+    getProductById: builder.query<Product, string>({
       query: (id: string) => `product/${id}`,
     }),
     getCategoryList: builder.query<string[], string>({
       query: () => `products/category-list`,
     }),
-    getCategoryByName: builder.query<Products, string>({
+    getCategoryByName: builder.query<Products, string | null>({
       query: (name: string | null) => `products/category/${name}`,
     }),
   }),

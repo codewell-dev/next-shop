@@ -29,6 +29,7 @@ export interface Products {
     images: string[]
     thumbnail: string
     quantity?: number
+    position?: string
   }
   
   export interface Dimensions {
@@ -50,4 +51,10 @@ export interface Products {
     updatedAt: string
     barcode: string
     qrCode: string
+  }
+
+  export interface Menu {
+    id: number;
+    path: string;
+    title: string;
   }

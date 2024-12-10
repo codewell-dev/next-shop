@@ -2,6 +2,7 @@
 import React, { Fragment, useState } from "react";
 import GridTileImage from "./grid-tile-images";
 import Link from "next/link";
+import { Product } from "@/lib/interfaces";
 
 export function ThreeItemGridItem({
   size,
@@ -10,13 +11,13 @@ export function ThreeItemGridItem({
   position,
   price,
   title,
-}: any) {
+}: {size: number, id: number, path: string, position: string, price: number, title: string}) {
   return (
     <div
       className={
         size == 0
-          ? "md:col-span-4 md:row-span-2"
-          : "md:col-span-2 md:row-span-1"
+          ? "lg:md:col-span-4 lg:md:row-span-2 col-span-2 row-span-2"
+          : "lg:md:col-span-2 lg:md:row-span-1 col-span-2 row-span-2"
       }
     >
       <Link
@@ -36,10 +37,10 @@ export function ThreeItemGridItem({
   );
 }
 
-export function ThreeItemGrid({items}: any) {
+export function ThreeItemGrid({items}: {items: Product[]}) {
   return (
     <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 pb-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">
-      {items?.map((item: any, index: any) => (
+      {items?.map((item: Product, index: number) => (
         <Fragment key={item.id}>
           <ThreeItemGridItem
             key={item.id}

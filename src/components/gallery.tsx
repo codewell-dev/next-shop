@@ -7,11 +7,12 @@ import { changeActiveImgMinus, changeActiveImgPlus } from "@/lib/utils";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Spinner from "./spinner";
+import { Product } from "@/lib/interfaces";
 
-export default function Gallery({ item }: any) {
+export default function Gallery({ item }: {item: Product}) {
   const searchParams = useSearchParams();
-  const imageParamsId = Number(searchParams.get("image"));
-  const [activeImage, setActiveImage] = useState<any>(imageParamsId || 0);
+  const imageParamsId: number = Number(searchParams.get("image"));
+  const [activeImage, setActiveImage] = useState<number>(imageParamsId || 0);
 
   useEffect(() => {
     setActiveImage(imageParamsId);
@@ -26,8 +27,6 @@ export default function Gallery({ item }: any) {
         <GridTileImage
           imgSrc={item.images[activeImage]}
           title={item.title}
-          position={item.position}
-          size={item.size}
           price={item.price}
           id={item.id}
           label={false}

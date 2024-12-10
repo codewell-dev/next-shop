@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
-import { productsApi } from './products'
-import cartSlice from './slices/cartSlice'
+import { productsApi } from './src/lib/products'
+import cartSlice from './src/lib/slices/cartSlice'
 
 export const makeStore = () => {
     return configureStore({

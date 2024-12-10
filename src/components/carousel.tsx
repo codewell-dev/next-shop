@@ -2,8 +2,9 @@ import React from "react";
 import GridTileImage from "./grid/grid-tile-images";
 import { useGetProductsQuery } from "@/lib/products";
 import Link from "next/link";
+import { Product, Products } from "@/lib/interfaces";
 
-export default function Carousel({ items }: any) {
+export default function Carousel({ items }: { items: Product[] }) {
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex animate-carousel gap-4 w-full">

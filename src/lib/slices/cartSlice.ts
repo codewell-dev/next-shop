@@ -7,8 +7,10 @@ const cartSlice = createSlice({
   name: "carts",
   initialState: [] as Product[],
   reducers: {
-    addProduct: (state, action: PayloadAction<any>) => {
-      const product: any = state.find((i: any) => i.id === action.payload.id);
+    addProduct: (state: Product[], action: PayloadAction<Product>) => {
+      const product: any = state.find(
+        (i: Product) => i.id === action.payload.id
+      );
       if (product) {
         product.quantity += 1;
       } else {
@@ -16,44 +18,43 @@ const cartSlice = createSlice({
           ...action.payload,
           quantity: 1,
         };
-
         state.push(product);
-        LocalStorageSet(current(state))
+        LocalStorageSet(current(state));
       }
     },
-    deleteProduct: (state, action: PayloadAction<any>) => {
-      const newState = state.filter((i) => i.id !== action.payload);
-      LocalStorageSet(newState)
-      return newState
+    deleteProduct: (state: Product[], action: PayloadAction<number>) => {
+      const newState: Product[] = state.filter((i) => i.id !== action.payload);
+      LocalStorageSet(newState);
+      return newState;
     },
-    addQuantity: (state: any, action) => {
-      const newState = state.find((i: any) => i.id === action.payload);
+    addQuantity: (state: Product[], action: PayloadAction<number>) => {
+      const newState: any = state.find((i: Product) => i.id === action.payload);
       if (newState) {
         newState.quantity += 1;
       }
-      LocalStorageSet(current(state))
-
+      LocalStorageSet(current(state));
     },
-    deleteQuantity: (state: any, action) => {
-      const item = state.find((i: any) => i.id === action.payload);
+    deleteQuantity: (state: Product[], action: PayloadAction<number>) => {
+      const item: any = state.find((i: Product) => i.id === action.payload);
       if (item.quantity == 1) {
-        let newState = state.filter((i: any) => i.id !== item.id);
-        LocalStorageSet(newState)
+        let newState = state.filter((i: Product) => i.id !== item.id);
+        LocalStorageSet(newState);
+        return newState
       } else {
         item.quantity -= 1;
-        LocalStorageSet(current(state))
+        LocalStorageSet(current(state));
       }
     },
-    getAllData: (state: any) => {
-      const from_localStorage: any = window.localStorage.getItem("cart");
+    getAllData: (state: Product[]) => {
+      const from_localStorage = window.localStorage.getItem("cart");
       if (from_localStorage) {
         const from_localStorageParse: any = JSON.parse(from_localStorage);
-        return state = from_localStorageParse;
+        return (state = from_localStorageParse);
       } else if (
         from_localStorage === null ||
         from_localStorage === undefined
       ) {
-        LocalStorageSet([].toString())
+        LocalStorageSet([].toString());
       }
     },
   },

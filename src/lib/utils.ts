@@ -12,6 +12,7 @@ export function changeActiveImgMinus(index: number, setActiveImage: any) {
     setActiveImage(index - 1)
   }
 }
+
 export function changeActiveImgPlus (index: number, setActiveImage: any, item: any) {
   if (index == item.images.length - 1) {
     return index
