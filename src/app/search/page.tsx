@@ -10,7 +10,6 @@ import {
   useGetProductsQuery,
 } from "@/lib/products";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 
 export default function Page() {
