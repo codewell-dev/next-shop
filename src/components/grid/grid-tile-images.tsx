@@ -1,7 +1,5 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Label } from "../label";
-import Image from "next/image";
-import Spinner from "../spinner";
 
 export default function GridTileImage({
   position,

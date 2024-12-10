@@ -29,7 +29,7 @@ export interface Products {
     images: string[]
     thumbnail: string
     quantity?: number
-    position?: string
+    position?: string | undefined
   }
   
   export interface Dimensions {

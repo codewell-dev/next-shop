@@ -12,15 +12,15 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function ProductPage() {
-  const [open, setOpen] = useState<Boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const id = useParams<{ handle: string }>();
   const dispath = useAppDispatch();
-  const { data, error, isLoading } = useGetProductByIdQuery<{
+  const { data, isLoading } = useGetProductByIdQuery<{
     data: Product;
     error: string;
-    isLoading: Boolean;
+    isLoading: boolean;
   }>(id.handle);
-  if (!data) {
+  if (isLoading) {
     return <Spinner />;
   }
   return (

@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/hooks";
 import { priceCounts } from "@/lib/utils";
 import { MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React from "react";
 
 export default function BasketCart({
   title,

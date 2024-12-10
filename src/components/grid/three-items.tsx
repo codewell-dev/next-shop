@@ -11,7 +11,7 @@ export function ThreeItemGridItem({
   position,
   price,
   title,
-}: {size: number, id: number, path: string, position: string, price: number, title: string}) {
+}: {size: number, id: number, path: string, position: string | undefined, price: number, title: string}) {
   return (
     <div
       className={
@@ -37,7 +37,7 @@ export function ThreeItemGridItem({
   );
 }
 
-export function ThreeItemGrid({items}: {items: Product[]}) {
+export function ThreeItemGrid({items}: {items: Product[] | undefined}) {
   return (
     <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 pb-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">
       {items?.map((item: Product, index: number) => (

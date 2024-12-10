@@ -10,33 +10,29 @@ import {
   useGetProductsQuery,
 } from "@/lib/products";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import React, { Suspense, useCallback } from "react";
+import {  useSearchParams } from "next/navigation";
+import React, { Suspense } from "react";
 
 export default function Page() {
   const {
     data: dataProducts,
-    error: errorProducts,
-    isLoading: isLoadingProducts,
   } = useGetProductsQuery<{
     data: Products;
     error: string;
-    isLoading: Boolean;
+    isLoading: boolean;
   }>("9");
   const {
     data: dataCategories,
-    error: errorCategories,
     isLoading: isLoadingCategories,
   } = useGetCategoryListQuery<{
     data: string[];
     error: string;
-    isLoading: Boolean;
+    isLoading: boolean;
   }>("");
   const searchParams = useSearchParams();
   const categoryName: string | null = searchParams.get("category");
   const {
     data: dataCategory,
-    error: errorCategory,
     isLoading: isLoadingCategory,
   } = useGetCategoryByNameQuery(categoryName);
 

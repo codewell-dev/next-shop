@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GridTileImage from "./grid/grid-tile-images";
 import { changeActiveImgMinus, changeActiveImgPlus } from "@/lib/utils";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
@@ -16,7 +16,7 @@ export default function Gallery({ item }: {item: Product}) {
 
   useEffect(() => {
     setActiveImage(imageParamsId);
-  }, [searchParams]);
+  }, [imageParamsId]);
 
   if (!item) {
     return <Spinner />;

@@ -37,7 +37,7 @@ const cartSlice = createSlice({
     deleteQuantity: (state: Product[], action: PayloadAction<number>) => {
       const item: any = state.find((i: Product) => i.id === action.payload);
       if (item.quantity == 1) {
-        let newState = state.filter((i: Product) => i.id !== item.id);
+        const newState = state.filter((i: Product) => i.id !== item.id);
         LocalStorageSet(newState);
         return newState
       } else {
@@ -49,7 +49,8 @@ const cartSlice = createSlice({
       const from_localStorage = window.localStorage.getItem("cart");
       if (from_localStorage) {
         const from_localStorageParse: any = JSON.parse(from_localStorage);
-        return (state = from_localStorageParse);
+        state = from_localStorageParse;
+        return state
       } else if (
         from_localStorage === null ||
         from_localStorage === undefined
