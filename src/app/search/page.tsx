@@ -24,7 +24,7 @@ export default function Page() {
           {data?.products.map((i: Product) => (
             <Link
               href={`/product/${i.id}`}
-              className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
+              className="w-80 h-80 mb-4 rounded-lg border hover:border-blue-600"
               key={i.id}
             >
               <GridTileImage

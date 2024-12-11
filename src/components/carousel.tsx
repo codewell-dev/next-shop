@@ -10,7 +10,7 @@ export default function Carousel({ items }: { items: Product[] | undefined}) {
         <div className="flex gap-6">
           {items?.map((i: any) => (
             <div
-              className="w-96 h-80 mb-4 rounded-lg border hover:border-blue-600"
+              className="w-72 h-72 md:w-80 md:h-80 mb-4 rounded-lg border hover:border-blue-600"
               key={i.id}
             >
               <Link href={`/product/${i.id}`}>

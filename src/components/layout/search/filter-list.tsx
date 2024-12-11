@@ -26,7 +26,7 @@ export default function FilterList() {
   ];
   return (
     <div className="category_right w-36 md:block hidden">
-      <p className="text-neutral-500 text-sm">Collections</p>
+      <p className="text-neutral-500 text-sm mb-2">Collections</p>
       <div className="flex flex-col">
         {sortby.map((i) => (
           <Link

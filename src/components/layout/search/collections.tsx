@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { SelectFilter } from "@/components/select-filter";
 import { useGetCategoryListQuery } from "@/lib/products";
 import Link from "next/link";
@@ -10,11 +10,11 @@ export default function Collections() {
       error: string;
       isLoading: boolean;
     }>("");
-  let categoryName = 'category';
+  let categoryName = "category";
   return (
-    <div>
+    <div className="mb-5">
+      <p className="text-neutral-500 text-sm mb-2">Collections</p>
       <div className="category_left w-48 md:block hidden">
-        <p className="text-neutral-500 text-sm">Collections</p>
         <div className="flex flex-col">
           {dataCategories?.map((i: string, index: number) => (
             <Link

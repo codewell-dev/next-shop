@@ -36,8 +36,7 @@ export default function BasketCart({
           />
         </div>
         <div className="text-sm flex flex-col flex-wrap mx-3">
-          <p>{title}</p>
-          <p className="text-neutral-400">{size}</p>
+          <p>{title.length > 18 ? title.slice(0,11) + `..` : title}</p>
         </div>
       </div>
 

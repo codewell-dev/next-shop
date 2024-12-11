@@ -36,10 +36,10 @@ export function ProviderSheet({
         </Button>
       </SheetTrigger>
       <SheetContent className="bg-neutral-200 h-full flex flex-col flex-wrap">
-        <SheetHeader className="h-10">
+        <SheetHeader className="h-6">
           <SheetTitle>My Cart</SheetTitle>
         </SheetHeader>
-        <div className="mt-4 flex-1">
+        <div className="flex-1 overflow-y-auto px-2">
           {cart?.map((i: Product, index: number) => (
             <BasketCart
               key={index}

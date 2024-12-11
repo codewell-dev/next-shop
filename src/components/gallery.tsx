@@ -22,8 +22,8 @@ export default function Gallery({ item }: {item: Product}) {
     return <Spinner />;
   }
   return (
-    <div className="relative w-full h-[800px] flex justify-center items-center flex-col pt-10">
-      <div className="w-[600px] h-[500px] relative p-3">
+    <div className="relative w-full md:h-[800px] flex justify-center items-center flex-col md:pt-10">
+      <div className="md:w-[600px] md:h-[500px] relative p-3">
         <GridTileImage
           imgSrc={item.images[activeImage]}
           title={item.title}

@@ -27,8 +27,8 @@ export default function ProductPage() {
     <div className="w-full p-4 lg:px-6 ">
       <div className="mx-auto max-w-screen-2xl flex flex-col md:flex-row shadow-lg border bg-white gap-4">
         <Gallery item={data} />
-        <div className="md:w-1/2 h-[800px] p-5">
-          <h1 className="text-6xl mt-10 mb-2">{data?.title}</h1>
+        <div className="md:w-1/2 md:h-[800px] p-5">
+          <h1 className="md:text-4xl text-3xl md:mt-10 mb-2">{data?.title}</h1>
           <div className="rounded-full text-white px-2 bg-blue-600 w-fit max-w-40">
             <p className="text-sm px-1.5 py-1.5 font-semibold">
               {data?.price} USD

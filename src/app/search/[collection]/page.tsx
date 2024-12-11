@@ -14,7 +14,7 @@ export default function Page() {
     return <Spinner />;
   }
   return (
-    <div className="w-full z-0 mt-10">
+    <div className="w-full z-0">
       <div className="flex flex-wrap gap-4 justify-center">
         {data?.products.map((i: Product) => (
           <Link
