@@ -1,64 +1,148 @@
+"use client";
 import Link from "next/link";
 import React from "react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { Button } from "./ui/button";
+
+const FOOTER_LINKS = {
+  Shop: [
+    { title: "All Products", path: "/search" },
+    { title: "Beauty", path: "/search/beauty" },
+    { title: "Fragrances", path: "/search/fragrances" },
+    { title: "Furniture", path: "/search/furniture" },
+  ],
+  Company: [
+    { title: "Our Story", path: "/#brand-story" },
+    { title: "Sustainability", path: "/" },
+    { title: "Press", path: "/" },
+    { title: "Careers", path: "/" },
+  ],
+  Support: [
+    { title: "FAQ", path: "/" },
+    { title: "Shipping & Returns", path: "/" },
+    { title: "Contact", path: "/" },
+    { title: "Privacy Policy", path: "/" },
+  ],
+};
 
 export function Footer() {
-  const menu = [
-    { id: 1, title: "Home", path: "/" },
-    { id: 2, title: "About", path: "/about" },
-    { id: 3, title: "Terms & Conditions", path: "/terms" },
-    { id: 4, title: "Privacy Policyy", path: "/privacy" },
-    { id: 5, title: "FAQ", path: "/faq" },
-  ];
   return (
-    <div className="footer">
-      <div className="footer-top mx-auto max-w-screen-2xl flex flex-col flex-wrap md:justify-between md:flex-row my-10 p-4 lg:px-6">
-        <div className="flex flex-col md:flex-row ">
-          <div className="flex gap-2 mr-10 items-center md:items-start">
-            <Link href={"/"} className="flex">
-              <div className="rounded-md border border-neutral-300 p-1.5 md:p-0.5 md:w-5 md:h-5 w-8 h-8 flex items-center justify-center">
-                <img src={"../logo.svg"} alt="logo" className="w-full h-full" />
-              </div>
+    <footer style={{ background: "var(--bg-elevated)", borderTop: "1px solid var(--border-light)" }}>
+      <div className="max-w-screen-2xl mx-auto px-6 pt-16 pb-8">
+        {/* Main grid */}
+        <div className="footer-grid mb-14" style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr 1fr 1fr", gap: "3rem" }}>
+          {/* Brand column */}
+          <div>
+            <Link
+              href="/"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.5rem",
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "var(--text-primary)",
+                textDecoration: "none",
+                display: "block",
+                marginBottom: "1.25rem",
+              }}
+            >
+              FORMA
             </Link>
-            <h6 className="md:text-sm text-md font-medium block">ACME STORE</h6>
+            <p
+              style={{
+                fontSize: "0.82rem",
+                color: "var(--text-secondary)",
+                lineHeight: 1.8,
+                maxWidth: "260px",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Premium goods for those who believe the things you own should reflect the life you want to live.
+            </p>
+            <div
+              className="h-px w-10 mb-4"
+              style={{ background: "var(--accent)" }}
+            />
+            <p
+              style={{
+                fontSize: "0.7rem",
+                color: "var(--text-muted)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+              }}
+            >
+              Objects of intention
+            </p>
           </div>
-          <ul className="mt-4 md:mt-0">
-            {menu.map((i) => (
-              <li
-                key={i.id}
-                className="mb-1.5 text-neutral-400 md:text-sm text-md border-b w-fit border-white hover:border-neutral-400"
-              >
-                <Link href={i.path}>{i.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex">
-          <Button variant={"outline"}>
-            <ExclamationTriangleIcon className="rounded-lg size-5" />
-          </Button>
-          <Button variant={"outline"}>
-            <p className="text-sm">Deploy</p>
-          </Button>
-        </div>
-      </div>
-      <div className="footer-down">
-        <div className="footer-line h-0.5 bg-neutral-300 w-full mb-2" />
-        <div className="footer-container mx-auto max-w-screen-2xl flex my-5 p-4 lg:px-6">
-          <div className="flex justify-between flex-wrap w-full">
-            <div className="flex">
-              <p className="text-neutral-400 text-sm">
-                © 2023-2024 ACME, Inc. All rights reserved.
-              </p>
-              <div className="h-5 w-0.5 bg-neutral-300 mx-5" />
-              <p className="text-neutral-400 text-sm">View the source</p>
-            </div>
 
-            <p className="text-sm block">Created by ▲ Vercel</p>
+          {/* Link columns */}
+          {Object.entries(FOOTER_LINKS).map(([group, links]) => (
+            <div key={group}>
+              <p
+                style={{
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "var(--accent)",
+                  marginBottom: "1.25rem",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {group}
+              </p>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.title}>
+                    <Link
+                      href={link.path}
+                      style={{
+                        fontSize: "0.82rem",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        transition: "color 0.2s",
+                        letterSpacing: "0.02em",
+                      }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "var(--text-primary)")}
+                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "var(--text-secondary)")}
+                    >
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6"
+          style={{ borderTop: "1px solid var(--border-light)" }}
+        >
+          <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}>
+            © 2025 FORMA, Inc. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            {["Twitter / X", "Instagram", "Pinterest"].map((s) => (
+              <Link
+                key={s}
+                href="/"
+                style={{
+                  fontSize: "0.7rem",
+                  color: "var(--text-muted)",
+                  textDecoration: "none",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "var(--text-secondary)")}
+                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "var(--text-muted)")}
+              >
+                {s}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

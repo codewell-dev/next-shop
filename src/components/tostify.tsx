@@ -1,35 +1,34 @@
-import React from "react";
+"use client";
+
 import * as Toast from "@radix-ui/react-toast";
-import { FaceSmileIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
-const ToastDemo = ({ children, open, setOpen }: any) => {
+export default function ToastDemo({
+  children,
+  open,
+  setOpen,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  setOpen: (v: boolean) => void;
+}) {
   return (
-    <Toast.Provider swipeDirection="right">
+    <Toast.Provider swipeDirection="right" duration={2800}>
       {children}
-
       <Toast.Root
         className="ToastRoot"
         open={open}
         onOpenChange={setOpen}
-        duration={2000}
       >
-        <XMarkIcon className="size-5 ml-auto" />
         <Toast.Title className="ToastTitle flex items-center gap-2">
-          Your product add basket{" "}
-          <FaceSmileIcon className="text-yellow-500 size-5" />
+          <CheckIcon className="size-3.5" style={{ color: "var(--success)" }} />
+          Added to cart
         </Toast.Title>
-        <Toast.Description asChild>
-          <p className="text-neutral-500">Thank you :)</p>
+        <Toast.Description className="ToastDescription">
+          Item has been added to your cart.
         </Toast.Description>
-        <Toast.Action
-          className="ToastAction"
-          asChild
-          altText="Goto schedule to undo"
-        ></Toast.Action>
       </Toast.Root>
       <Toast.Viewport className="ToastViewport" />
     </Toast.Provider>
   );
-};
-
-export default ToastDemo;
+}
