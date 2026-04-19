@@ -3,10 +3,12 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import StoreProvider from "./StoreProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "FORMA — Objects of Intention",
-  description: "Premium lifestyle products, curated for those who value craft, quality, and design.",
+  description:
+    "Premium lifestyle products, curated for those who value craft, quality, and design.",
 };
 
 export default function RootLayout({
@@ -19,11 +21,10 @@ export default function RootLayout({
       <body>
         <StoreProvider>
           <Navbar />
-          <main className="pt-[65px]">
-            {children}
-          </main>
+          <main className="pt-[65px]">{children}</main>
           <Footer />
         </StoreProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
