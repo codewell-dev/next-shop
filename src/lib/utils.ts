@@ -1,34 +1,39 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { Product } from "./interfaces";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export function changeActiveImgMinus(index: number, setActiveImage: any) {
-  if(index == 0) {
-    return index
-  } else {
-    setActiveImage(index - 1)
+export function priceCounts(quantity: number | undefined, price: number): string {
+  const qty = quantity ?? 1;
+  return (qty * price).toFixed(2);
+}
+
+export function LocalStorageSet(data: any) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("cart", JSON.stringify(data));
   }
 }
 
-export function changeActiveImgPlus (index: number, setActiveImage: any, item: any) {
-  if (index == item.images.length - 1) {
-    return index
+export function changeActiveImgPlus(
+  current: number,
+  setter: (n: number) => void,
+  item: Product
+) {
+  if (current < item.images.length - 1) {
+    setter(current + 1);
   } else {
-    setActiveImage(index + 1)
+    setter(0);
   }
 }
 
-export function priceCounts(quantity: any, price: any) {
-  if(quantity == 1) {
-    return price.toString().slice(0,5)
-  } else {
-    let newPrice: any = price * quantity
-    return newPrice.toString().slice(0,5)
+export function changeActiveImgMinus(
+  current: number,
+  setter: (n: number) => void
+) {
+  if (current > 0) {
+    setter(current - 1);
   }
-} 
-export function LocalStorageSet(state: any) {
-  localStorage.setItem("cart", JSON.stringify(state));
 }
