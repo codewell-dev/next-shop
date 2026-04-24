@@ -10,53 +10,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          bg: "#0a0a0b",
-          elevated: "#131315",
-          overlay: "#1c1c1f",
-          card: "#161618",
-          border: "#252528",
-          "border-light": "#1e1e21",
-          primary: "#ede8dc",
-          secondary: "#8a8a8e",
-          muted: "#4a4a4e",
-          accent: "#c9a96e",
-          "accent-hover": "#dfc08a",
-        },
+        paper:  "#f0ece4",
+        paper2: "#e8e2d8",
+        paper3: "#ddd6c8",
+        ink:    "#1a1a1a",
+        ink2:   "#333333",
+        ink3:   "#666666",
+        ink4:   "#999999",
+        ink5:   "#cccccc",
+        rust:   "#b5451b",
       },
       fontFamily: {
-        display: ["'Cormorant Garamond'", "serif"],
-        body: ["'DM Sans'", "sans-serif"],
-        sans: ["'DM Sans'", "sans-serif"],
+        display: ["'Playfair Display'", "Georgia", "serif"],
+        mono:    ["'IBM Plex Mono'", "'Courier New'", "monospace"],
+        sans:    ["'IBM Plex Sans'", "'Helvetica Neue'", "sans-serif"],
+      },
+      borderWidth: {
+        "3": "3px",
       },
       keyframes: {
         fadeUp: {
-          from: { opacity: "0", transform: "translateY(22px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        fadeIn: {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-100%)" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "200% 0" },
-          "100%": { backgroundPosition: "-200% 0" },
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to:   { opacity: "1", transform: "translateY(0)" },
         },
         ticker: {
           from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-50%)" },
+          to:   { transform: "translateX(-50%)" },
         },
       },
       animation: {
-        "fade-up": "fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) both",
-        "fade-in": "fadeIn 0.4s ease both",
-        carousel: "marquee 60s linear infinite",
-        shimmer: "shimmer 1.8s linear infinite",
-        ticker: "ticker 40s linear infinite",
+        "fade-up": "fadeUp 0.5s ease both",
+        ticker:    "ticker 38s linear infinite",
       },
     },
   },

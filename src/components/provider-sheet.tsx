@@ -1,21 +1,14 @@
 "use client";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
 } from "@/components/ui/sheet";
-import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import BasketCart from "./basket-cart";
 import { addQuantity, deleteProduct, deleteQuantity } from "@/lib/slices/cartSlice";
 import { Product } from "@/lib/interfaces";
 
 export function ProviderSheet({
-  cart,
-  totalPrice,
-  cartTotal,
+  cart, totalPrice, cartTotal,
 }: {
   cart: Product[];
   totalPrice: number | string;
@@ -25,77 +18,94 @@ export function ProviderSheet({
     <Sheet>
       <SheetTrigger asChild>
         <button
-          className="relative flex items-center gap-2 px-3 py-2 rounded-sm transition-colors"
           style={{
-            background: "var(--bg-elevated)",
-            border: "1px solid var(--border-light)",
-            color: "var(--text-secondary)",
-            fontFamily: "var(--font-body)",
-            fontSize: "0.75rem",
-            letterSpacing: "0.06em",
+            fontFamily: "var(--fm)",
+            fontSize: "0.65rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: cartTotal > 0 ? "var(--ink)" : "var(--ink-3)",
+            background: "none",
+            border: "none",
             cursor: "pointer",
+            padding: 0,
+            position: "relative",
+            transition: "color 0.15s",
           }}
-          aria-label={`Cart (${cartTotal} items)`}
+          aria-label={`Cart (${cartTotal})`}
         >
-          <ShoppingBagIcon className="size-4" />
-          {cartTotal > 0 && (
-            <span
-              className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-xs"
-              style={{
-                background: "var(--accent)",
-                color: "#0a0a0b",
-                fontSize: "0.6rem",
-                fontWeight: 600,
-              }}
-            >
-              {cartTotal}
-            </span>
-          )}
+          Bag ({cartTotal})
         </button>
       </SheetTrigger>
 
       <SheetContent
-        className="flex flex-col"
+        className="flex flex-col cart-sheet-inner"
         style={{
-          background: "var(--bg-elevated)",
-          borderLeft: "1px solid var(--border)",
-          color: "var(--text-primary)",
-          maxWidth: "420px",
+          background: "var(--paper)",
+          borderLeft: "var(--rule)",
+          color: "var(--ink)",
+          maxWidth: 420,
           width: "100%",
+          padding: 0,
         }}
       >
-        <SheetHeader className="pb-4" style={{ borderBottom: "1px solid var(--border-light)" }}>
+        {/* Header */}
+        <SheetHeader
+          className="px-6 py-4"
+          style={{ borderBottom: "var(--rule)" }}
+        >
           <SheetTitle
             style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.4rem",
-              fontWeight: 400,
-              color: "var(--text-primary)",
-              letterSpacing: "0.02em",
+              fontFamily: "var(--fd)",
+              fontStyle: "italic",
+              fontSize: "1.6rem",
+              fontWeight: 700,
+              color: "var(--ink)",
+              letterSpacing: "-0.02em",
             }}
           >
-            Your Cart
+            Your Bag
             {cartTotal > 0 && (
               <span
-                className="ml-2"
-                style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontFamily: "var(--font-body)", fontWeight: 300 }}
+                style={{
+                  fontFamily: "var(--fm)",
+                  fontSize: "0.75rem",
+                  color: "var(--ink-4)",
+                  fontWeight: 400,
+                  fontStyle: "normal",
+                  marginLeft: 10,
+                  letterSpacing: "0.06em",
+                }}
               >
-                ({cartTotal} {cartTotal === 1 ? "item" : "items"})
+                {cartTotal} item{cartTotal !== 1 ? "s" : ""}
               </span>
             )}
           </SheetTitle>
         </SheetHeader>
 
-        {/* Cart items */}
-        <div className="flex-1 overflow-y-auto py-2">
+        {/* Items */}
+        <div className="flex-1 overflow-y-auto">
           {cart.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full gap-4 py-16">
-              <ShoppingBagIcon className="size-10" style={{ color: "var(--text-muted)" }} />
-              <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", letterSpacing: "0.06em" }}>
-                Your cart is empty
-              </p>
-              <p style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
-                Add something beautiful
+            <div className="flex flex-col items-center justify-center h-full gap-4 py-20">
+              <span
+                style={{
+                  fontFamily: "var(--fd)",
+                  fontStyle: "italic",
+                  fontSize: "2rem",
+                  color: "var(--ink-5)",
+                }}
+              >
+                Empty
+              </span>
+              <p
+                style={{
+                  fontFamily: "var(--fm)",
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-4)",
+                }}
+              >
+                Nothing added yet
               </p>
             </div>
           ) : (
@@ -118,41 +128,67 @@ export function ProviderSheet({
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="pt-4" style={{ borderTop: "1px solid var(--border-light)" }}>
-            <div className="space-y-2.5 mb-5">
+          <div
+            className="px-6 py-5"
+            style={{ borderTop: "var(--rule)" }}
+          >
+            {/* Line items */}
+            <div className="flex flex-col gap-2 mb-5">
               {[
-                { label: "Subtotal", value: `$${Number(totalPrice).toFixed(2)}` },
-                { label: "Shipping", value: "Calculated at checkout" },
-                { label: "Taxes", value: "Calculated at checkout" },
-              ].map((row) => (
-                <div key={row.label} className="flex justify-between items-center">
-                  <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}>
-                    {row.label}
+                { label: "Subtotal",  val: `$${Number(totalPrice).toFixed(2)}`, bold: true },
+                { label: "Shipping",  val: "At checkout" },
+                { label: "Tax",       val: "At checkout" },
+              ].map((r) => (
+                <div key={r.label} className="flex justify-between items-baseline">
+                  <span
+                    style={{
+                      fontFamily: "var(--fm)",
+                      fontSize: "0.65rem",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "var(--ink-3)",
+                    }}
+                  >
+                    {r.label}
                   </span>
                   <span
                     style={{
-                      fontSize: "0.85rem",
-                      color: row.label === "Subtotal" ? "var(--text-primary)" : "var(--text-muted)",
-                      fontFamily: row.label === "Subtotal" ? "var(--font-display)" : "var(--font-body)",
+                      fontFamily: r.bold ? "var(--fd)" : "var(--fm)",
+                      fontStyle: r.bold ? "italic" : "normal",
+                      fontSize: r.bold ? "1.1rem" : "0.75rem",
+                      color: r.bold ? "var(--ink)" : "var(--ink-3)",
+                      fontWeight: r.bold ? 700 : 400,
                     }}
                   >
-                    {row.value}
+                    {r.val}
                   </span>
                 </div>
               ))}
+
+              {/* Total */}
               <div
-                className="flex justify-between items-center pt-3 mt-3"
-                style={{ borderTop: "1px solid var(--border-light)" }}
+                className="flex justify-between items-baseline pt-3 mt-1"
+                style={{ borderTop: "var(--rule-thin)" }}
               >
-                <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--fm)",
+                    fontSize: "0.65rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--ink)",
+                  }}
+                >
                   Total
                 </span>
                 <span
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.4rem",
-                    color: "var(--text-primary)",
-                    fontWeight: 400,
+                    fontFamily: "var(--fd)",
+                    fontStyle: "italic",
+                    fontSize: "1.8rem",
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                    letterSpacing: "-0.02em",
                   }}
                 >
                   ${Number(totalPrice).toFixed(2)}
@@ -160,16 +196,19 @@ export function ProviderSheet({
               </div>
             </div>
 
-            <button
-              className="btn-primary w-full py-4 justify-center"
-              style={{ fontSize: "0.75rem", letterSpacing: "0.14em" }}
-            >
-              Proceed to Checkout
+            <button className="btn-primary w-full justify-center py-4">
+              Proceed to Checkout →
             </button>
 
             <p
               className="text-center mt-3"
-              style={{ fontSize: "0.68rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}
+              style={{
+                fontFamily: "var(--fm)",
+                fontSize: "0.6rem",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--ink-4)",
+              }}
             >
               Secure checkout · SSL encrypted
             </p>

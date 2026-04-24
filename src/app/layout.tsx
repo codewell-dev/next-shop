@@ -3,28 +3,25 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import StoreProvider from "./StoreProvider";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "FORMA — Objects of Intention",
-  description:
-    "Premium lifestyle products, curated for those who value craft, quality, and design.",
+  description: "Premium lifestyle goods, curated for those who believe the things you own should reflect the life you want to live.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body>
         <StoreProvider>
           <Navbar />
-          <main className="pt-[65px]">{children}</main>
+          <main style={{ paddingTop: "calc(36px + 58px)" }}>
+            {children}
+          </main>
           <Footer />
         </StoreProvider>
-        <SpeedInsights />
       </body>
     </html>
   );

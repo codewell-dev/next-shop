@@ -1,113 +1,173 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/interfaces";
 import { useAppDispatch } from "@/lib/hooks";
 import { addProduct } from "@/lib/slices/cartSlice";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 export default function Carousel({ items }: { items: Product[] | undefined }) {
   const dispatch = useAppDispatch();
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
   const scroll = (dir: "left" | "right") => {
-    if (!trackRef.current) return;
-    const amount = 320;
-    trackRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    trackRef.current?.scrollBy({
+      left: dir === "left" ? -300 : 300,
+      behavior: "smooth",
+    });
   };
 
   if (!items?.length) return null;
 
   return (
-    <section className="py-20 px-4" style={{ borderTop: "1px solid var(--border-light)" }}>
+    <section style={{ borderBottom: "var(--rule)" }}>
       {/* Header */}
-      <div className="max-w-screen-2xl mx-auto mb-10 flex items-end justify-between">
-        <div>
-          <p className="section-eyebrow mb-3">Curated Selection</p>
-          <h2 className="section-title text-4xl md:text-5xl lg:text-6xl">
+      <div
+        className="flex items-baseline justify-between px-6 py-5"
+        style={{ borderBottom: "var(--rule-thin)" }}
+      >
+        <div className="flex items-baseline gap-6">
+          <span className="t-label" style={{ color: "var(--rust)" }}>Curated Selection</span>
+          <h2
+            className="t-section"
+            style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
+          >
             More to Explore
           </h2>
         </div>
-        <div className="hidden md:flex items-center gap-2">
-          <button
-            onClick={() => scroll("left")}
-            className="p-2.5 rounded-sm transition-colors"
-            style={{ border: "1px solid var(--border)", background: "var(--bg-elevated)" }}
-            aria-label="Scroll left"
-          >
-            <ArrowLeftIcon className="size-4" style={{ color: "var(--text-secondary)" }} />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className="p-2.5 rounded-sm transition-colors"
-            style={{ border: "1px solid var(--border)", background: "var(--bg-elevated)" }}
-            aria-label="Scroll right"
-          >
-            <ArrowRightIcon className="size-4" style={{ color: "var(--text-secondary)" }} />
-          </button>
+        <div className="hidden md:flex items-center gap-0">
+          {["←", "→"].map((arrow, i) => (
+            <button
+              key={arrow}
+              onClick={() => scroll(i === 0 ? "left" : "right")}
+              style={{
+                fontFamily: "var(--fm)",
+                fontSize: "1rem",
+                color: "var(--ink-3)",
+                background: "none",
+                border: "var(--rule-thin)",
+                borderRight: i === 0 ? "none" : "var(--rule-thin)",
+                width: 40,
+                height: 40,
+                cursor: "pointer",
+                transition: "background 0.15s, color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = "var(--ink)";
+                el.style.color = "var(--paper)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = "none";
+                el.style.color = "var(--ink-3)";
+              }}
+            >
+              {arrow}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Scrollable track */}
+      {/* Track */}
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto pb-4 max-w-screen-2xl mx-auto"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          cursor: "grab",
-        }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        className="flex overflow-x-auto"
+        style={{ scrollbarWidth: "none" }}
       >
         {items.map((product: Product, i: number) => (
-          <div key={product.id} className="flex-none w-64 md:w-72">
+          <div
+            key={product.id}
+            className="flex-none w-56 md:w-64"
+            style={{
+              borderRight: "var(--rule-thin)",
+            }}
+          >
             <Link href={`/product/${product.id}`} className="block">
-              <div className="product-card">
-                <div className="product-card-img-wrap" style={{ height: "260px", aspectRatio: "unset" }}>
-                  <img
-                    src={product.images[0]}
-                    alt={product.title}
-                    className="product-card-img"
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://via.placeholder.com/400x400/131315/4a4a4e?text=FORMA";
+              <div
+                style={{
+                  background: "var(--paper-3)",
+                  height: 220,
+                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderBottom: "var(--rule-thin)",
+                  position: "relative",
+                }}
+              >
+                <img
+                  src={product.images[0]}
+                  alt={product.title}
+                  style={{
+                    height: 180,
+                    objectFit: "contain",
+                    padding: "1rem",
+                    filter: "contrast(1.06)",
+                    transition: "transform 0.4s ease",
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "https://via.placeholder.com/300x300/ddd6c8/999?text=FORMA";
+                  }}
+                />
+              </div>
+              <div className="p-3">
+                <span className="prod-number block mb-1">
+                  {String(i + 1).padStart(2, "0")} — {product.category}
+                </span>
+                <p
+                  className="line-clamp-1 mb-1"
+                  style={{
+                    fontFamily: "var(--fd)",
+                    fontStyle: "italic",
+                    fontSize: "0.95rem",
+                    color: "var(--ink)",
+                  }}
+                >
+                  {product.title}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span
+                    style={{
+                      fontFamily: "var(--fm)",
+                      fontSize: "0.82rem",
+                      fontWeight: 500,
+                      color: "var(--ink)",
                     }}
-                  />
-                </div>
-                <div className="product-card-overlay">
+                  >
+                    ${product.price.toFixed(2)}
+                  </span>
                   <button
-                    className="product-card-quick-btn"
                     onClick={(e) => {
                       e.preventDefault();
                       dispatch(addProduct(product));
                     }}
-                  >
-                    Quick Add
-                  </button>
-                </div>
-                <div className="p-3" style={{ borderTop: "1px solid var(--border-light)" }}>
-                  <p
-                    className="line-clamp-1 mb-1"
                     style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.95rem",
-                      color: "var(--text-primary)",
+                      fontFamily: "var(--fm)",
+                      fontSize: "0.6rem",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "var(--ink-3)",
+                      background: "none",
+                      border: "var(--rule-thin)",
+                      padding: "4px 10px",
+                      cursor: "pointer",
+                      transition: "background 0.15s, color 0.15s",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.background = "var(--ink)";
+                      el.style.color = "var(--paper)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.background = "none";
+                      el.style.color = "var(--ink-3)";
                     }}
                   >
-                    {product.title}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--text-primary)" }}>
-                      ${product.price.toFixed(2)}
-                    </span>
-                    {product.discountPercentage > 5 && (
-                      <span className="discount-badge">−{Math.round(product.discountPercentage)}%</span>
-                    )}
-                  </div>
+                    Add +
+                  </button>
                 </div>
               </div>
             </Link>
