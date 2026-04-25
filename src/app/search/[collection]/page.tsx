@@ -21,7 +21,7 @@ export default function CollectionPage() {
   }>(collection);
 
   return (
-    <div>
+    <div className="page-wrap">
       {/* Header */}
       <div style={{ borderBottom: "var(--rule)" }}>
         <div className="px-6 py-10">

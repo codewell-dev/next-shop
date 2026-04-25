@@ -12,22 +12,9 @@ export function ThreeItemGrid({ items }: { items: Product[] | undefined }) {
   const [first, second, third] = items;
 
   return (
-    <div
-      className="grid"
-      style={{
-        gridTemplateColumns: "2fr 1fr 1fr",
-        gridTemplateRows: "auto auto",
-        borderTop: "var(--rule)",
-      }}
-    >
-      {/* Large — spans 2 rows */}
-      <div
-        className="fade-up fade-up-1"
-        style={{
-          gridRow: "1 / 3",
-          borderRight: "var(--rule-thin)",
-        }}
-      >
+    <div className="feat-grid" style={{ borderTop: "var(--rule)" }}>
+      {/* Large — spans 2 rows on desktop */}
+      <div className="feat-large" style={{ borderRight: "var(--rule-thin)" }}>
         <Link href={`/product/${first.id}`} className="block h-full">
           <GridTileImage
             imgSrc={first.images[0]}
@@ -42,11 +29,7 @@ export function ThreeItemGrid({ items }: { items: Product[] | undefined }) {
         </Link>
       </div>
 
-      {/* Top-right */}
-      <div
-        className="fade-up fade-up-2"
-        style={{ borderBottom: "var(--rule-thin)", borderRight: "var(--rule-thin)" }}
-      >
+      <div className="feat-small" style={{ borderRight: "var(--rule-thin)" }}>
         <Link href={`/product/${second.id}`} className="block h-full">
           <GridTileImage
             imgSrc={second.images[0]}
@@ -61,8 +44,7 @@ export function ThreeItemGrid({ items }: { items: Product[] | undefined }) {
         </Link>
       </div>
 
-      {/* Bottom-right */}
-      <div className="fade-up fade-up-3" style={{ borderRight: "var(--rule-thin)" }}>
+      <div style={{ borderRight: "var(--rule-thin)" }}>
         <Link href={`/product/${third.id}`} className="block h-full">
           <GridTileImage
             imgSrc={third.images[0]}
@@ -77,6 +59,5 @@ export function ThreeItemGrid({ items }: { items: Product[] | undefined }) {
         </Link>
       </div>
     </div>
-    
   );
 }

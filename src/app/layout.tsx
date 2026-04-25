@@ -9,15 +9,13 @@ export const metadata: Metadata = {
   description: "Premium lifestyle goods, curated for those who believe the things you own should reflect the life you want to live.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body>
         <StoreProvider>
           <Navbar />
-          <main style={{ paddingTop: "calc(36px + 58px)" }}>
+          <main style={{ paddingTop: 92 }}>
             {children}
           </main>
           <Footer />

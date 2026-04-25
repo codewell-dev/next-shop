@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import Search from "./search";
 import MobileMenu from "./mobile-menu";
 import { ProviderSheet } from "../provider-sheet";
@@ -36,15 +36,14 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      {/* Ticker — inverted */}
+      {/* Ticker */}
       <div className="ticker-wrap">
         <div className="ticker-track">
           {[0, 1].map((rep) => (
             <span key={rep} className="ticker-item">
               {TICKER.map((t, i) => (
                 <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 36 }}>
-                  {t}
-                  <span className="ticker-sep">✦</span>
+                  {t}<span className="ticker-sep">✦</span>
                 </span>
               ))}
             </span>
@@ -52,60 +51,30 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Main row */}
-      <div className="flex items-stretch justify-between" style={{ minHeight: 56 }}>
-        {/* Mobile menu */}
+      {/* Nav row */}
+      <div className="page-wrap flex items-stretch" style={{ minHeight: 56 }}>
+
+        {/* Mobile menu trigger */}
         <div className="flex items-center px-4 md:hidden" style={{ borderRight: "var(--rule-thin)" }}>
           <Suspense fallback={null}>
             <MobileMenu menu={MENU} />
           </Suspense>
         </div>
 
-        {/* Issue tag + nav links */}
+        {/* Desktop: logo + links */}
         <div className="hidden md:flex items-stretch">
-          <Link
-            href="/"
-            className="flex items-center px-6"
-            style={{ borderRight: "var(--rule-thin)" }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--fd)",
-                fontStyle: "italic",
-                fontWeight: 700,
-                fontSize: "1.45rem",
-                letterSpacing: "-0.03em",
-                color: "var(--ink)",
-              }}
-            >
+          <Link href="/" className="flex items-center px-6" style={{ borderRight: "var(--rule-thin)" }}>
+            <span style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontWeight: 700, fontSize: "1.45rem", letterSpacing: "-0.03em", color: "var(--ink)" }}>
               FORMA
             </span>
           </Link>
-
           <div className="flex items-stretch">
             {MENU.map((item) => (
-              <Link
-                key={item.id}
-                href={item.path}
+              <Link key={item.id} href={item.path}
                 className="flex items-center px-5"
-                style={{
-                  fontFamily: "var(--fm)",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--ink-3)",
-                  borderRight: "var(--rule-thin)",
-                  textDecoration: "none",
-                  transition: "color 0.15s, background 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--ink)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--paper-2)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--ink-3)";
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                }}
+                style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-3)", borderRight: "var(--rule-thin)", textDecoration: "none", transition: "color 0.15s, background 0.15s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "var(--ink)"; el.style.background = "var(--paper-2)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "var(--ink-3)"; el.style.background = "transparent"; }}
               >
                 {item.title}
               </Link>
@@ -113,38 +82,23 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Logo on mobile */}
-        <Link
-          href="/"
-          className="flex items-center px-5 md:hidden flex-1 justify-center"
-        >
-          <span
-            style={{
-              fontFamily: "var(--fd)",
-              fontStyle: "italic",
-              fontWeight: 700,
-              fontSize: "1.3rem",
-              letterSpacing: "-0.03em",
-              color: "var(--ink)",
-            }}
-          >
+        {/* Mobile: logo center */}
+        <Link href="/" className="flex items-center justify-center flex-1 px-4 md:hidden">
+          <span style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontWeight: 700, fontSize: "1.3rem", letterSpacing: "-0.03em", color: "var(--ink)" }}>
             FORMA
           </span>
         </Link>
 
         {/* Right: search + cart */}
-        <div className="flex items-stretch">
-          <div className="hidden md:flex items-center px-4" style={{ borderLeft: "var(--rule-thin)" }}>
+        <div className="flex items-stretch ml-auto">
+          <div className="nav-search hidden md:flex items-center px-4" style={{ borderLeft: "var(--rule-thin)" }}>
             <Search />
           </div>
           <div className="flex items-center px-4" style={{ borderLeft: "var(--rule-thin)" }}>
-            <ProviderSheet
-              cart={cart}
-              totalPrice={totalPrice}
-              cartTotal={cart.length}
-            />
+            <ProviderSheet cart={cart} totalPrice={totalPrice} cartTotal={cart.length} />
           </div>
         </div>
+
       </div>
     </header>
   );

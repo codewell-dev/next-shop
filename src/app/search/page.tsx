@@ -36,7 +36,7 @@ export default function SearchPage() {
   }, [data, sort]);
 
   return (
-    <div>
+    <div className="page-wrap">
       {/* Page header */}
       <div style={{ borderBottom: "var(--rule)" }}>
         <div className="px-6 py-10">
