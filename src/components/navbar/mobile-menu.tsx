@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Menu } from "@/lib/interfaces";
 
 export default function MobileMenu({ menu }: { menu: Menu[] }) {
@@ -12,55 +11,112 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="p-2 rounded-sm"
-        style={{ border: "1px solid var(--border-light)", background: "var(--bg-elevated)" }}
-        aria-label="Open menu"
+        style={{
+          fontFamily: "var(--fm)",
+          fontSize: "0.65rem",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "var(--ink-3)",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+        }}
+        aria-label="Menu"
       >
-        <Bars3Icon className="size-4" style={{ color: "var(--text-secondary)" }} />
+        Menu
       </button>
 
       {open && (
         <div
           className="fixed inset-0 z-[200] flex"
-          style={{ background: "rgba(10,10,11,0.7)", backdropFilter: "blur(4px)" }}
+          style={{ background: "rgba(26,26,26,0.6)" }}
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-72 h-full flex flex-col p-8 animate-fade-in"
-            style={{ background: "var(--bg-elevated)", borderRight: "1px solid var(--border)" }}
+            className="w-72 h-full flex flex-col"
+            style={{
+              background: "var(--paper)",
+              borderRight: "var(--rule)",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-12">
+            {/* Header */}
+            <div
+              className="flex items-center justify-between px-6 py-4"
+              style={{ borderBottom: "var(--rule)" }}
+            >
               <span
-                className="navbar-logo"
-                style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "0.14em", textTransform: "uppercase" }}
+                style={{
+                  fontFamily: "var(--fd)",
+                  fontStyle: "italic",
+                  fontWeight: 700,
+                  fontSize: "1.3rem",
+                  letterSpacing: "-0.03em",
+                  color: "var(--ink)",
+                }}
               >
                 FORMA
               </span>
-              <button onClick={() => setOpen(false)}>
-                <XMarkIcon className="size-5" style={{ color: "var(--text-secondary)" }} />
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "var(--fm)",
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-3)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Close
               </button>
             </div>
 
-            <nav className="flex flex-col gap-6">
+            {/* Nav */}
+            <nav className="flex flex-col">
               {menu.map((item) => (
                 <Link
                   key={item.id}
                   href={item.path}
-                  className="nav-link"
-                  style={{ fontSize: "0.82rem" }}
                   onClick={() => setOpen(false)}
+                  className="flex items-center px-6 py-4"
+                  style={{
+                    fontFamily: "var(--fm)",
+                    fontSize: "0.72rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--ink-2)",
+                    textDecoration: "none",
+                    borderBottom: "var(--rule-thin)",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.currentTarget as HTMLElement).style.background = "var(--paper-2)")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.currentTarget as HTMLElement).style.background = "transparent")
+                  }
                 >
                   {item.title}
                 </Link>
               ))}
             </nav>
 
-            <div className="mt-auto">
-              <div className="divider mb-6" />
-              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", letterSpacing: "0.1em" }}>
-                Objects of intention
-              </p>
+            <div className="mt-auto px-6 pb-8">
+              <span
+                style={{
+                  fontFamily: "var(--fm)",
+                  fontSize: "0.6rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-4)",
+                }}
+              >
+                Objects of Intention
+              </span>
             </div>
           </div>
         </div>

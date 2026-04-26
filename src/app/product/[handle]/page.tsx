@@ -4,349 +4,200 @@ import Spinner from "@/components/spinner";
 import ToastDemo from "@/components/tostify";
 import { useAppDispatch } from "@/lib/hooks";
 import { Product } from "@/lib/interfaces";
-import { useGetProductByIdQuery, useGetProductsQuery } from "@/lib/products";
+import { useGetProductByIdQuery } from "@/lib/products";
 import { addProduct } from "@/lib/slices/cartSlice";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeftIcon, ShoppingBagIcon, StarIcon } from "@heroicons/react/24/outline";
-import { StarIcon as StarSolid } from "@heroicons/react/24/solid";
-
-function ReviewCard({ review }: { review: any }) {
-  return (
-    <div
-      className="p-5"
-      style={{
-        background: "var(--bg-elevated)",
-        border: "1px solid var(--border-light)",
-        borderRadius: "3px",
-      }}
-    >
-      <div className="flex items-center gap-1 mb-2">
-        {[1, 2, 3, 4, 5].map((s) =>
-          s <= review.rating ? (
-            <StarSolid key={s} className="w-3 h-3" style={{ color: "var(--accent)" }} />
-          ) : (
-            <StarIcon key={s} className="w-3 h-3" style={{ color: "var(--text-muted)" }} />
-          )
-        )}
-      </div>
-      <p
-        style={{
-          fontSize: "0.83rem",
-          color: "var(--text-secondary)",
-          lineHeight: 1.7,
-          marginBottom: "10px",
-          fontStyle: "italic",
-        }}
-      >
-        "{review.comment}"
-      </p>
-      <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-        — {review.reviewerName}
-      </p>
-    </div>
-  );
-}
 
 export default function ProductPage() {
   const [toastOpen, setToastOpen] = useState(false);
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeImg, setActiveImg] = useState(0);
   const dispatch = useAppDispatch();
   const { handle } = useParams<{ handle: string }>();
 
   const { data, isLoading } = useGetProductByIdQuery<{
-    data: Product;
-    error: string;
-    isLoading: boolean;
+    data: Product; error: string; isLoading: boolean;
   }>(handle);
-
-  const { data: relatedData } = useGetProductsQuery("6");
 
   if (isLoading) return <Spinner />;
   if (!data) return null;
 
-  const discountedOriginal =
-    data.discountPercentage > 0
-      ? (data.price / (1 - data.discountPercentage / 100)).toFixed(2)
-      : null;
+  const original = data.discountPercentage > 0
+    ? (data.price / (1 - data.discountPercentage / 100)).toFixed(2)
+    : null;
 
-  const stockStatus =
-    data.stock > 20
-      ? { label: "In Stock", color: "var(--success)" }
-      : data.stock > 0
-      ? { label: `Only ${data.stock} left`, color: "var(--accent)" }
-      : { label: "Out of Stock", color: "var(--red)" };
+  const stock =
+    data.stock > 20 ? { label: "In Stock",                color: "#2d6a4f" } :
+    data.stock >  0 ? { label: `Only ${data.stock} left`, color: "var(--rust)" } :
+                      { label: "Out of Stock",             color: "#c1121f" };
+
+  const P = "clamp(16px, 3vw, 40px)";
 
   return (
-    <div className="min-h-screen">
+    <div className="page-wrap">
+
       {/* Breadcrumb */}
-      <div
-        className="px-6 py-4 border-b"
-        style={{ borderColor: "var(--border-light)" }}
-      >
-        <div className="max-w-screen-2xl mx-auto flex items-center gap-3">
-          <Link href="/search" className="flex items-center gap-2 nav-link" style={{ fontSize: "0.72rem" }}>
-            <ArrowLeftIcon className="size-3" /> All Products
-          </Link>
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>/</span>
-          <span
-            style={{
-              fontSize: "0.72rem",
-              color: "var(--text-muted)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
-            {data.category}
-          </span>
-        </div>
+      <div className="flex items-center gap-3 flex-wrap"
+        style={{ padding: "10px clamp(16px, 3vw, 28px)", borderBottom: "var(--rule-thin)" }}>
+        <Link href="/search" style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-3)", textDecoration: "none" }}>
+          ← All Products
+        </Link>
+        <span style={{ color: "var(--ink-5)", fontFamily: "var(--fm)", fontSize: "0.65rem" }}>/</span>
+        <span style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-4)" }}>{data.category}</span>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-6 py-10">
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-          {/* ── Gallery ── */}
-          <div>
-            {/* Main image */}
-            <div
-              className="relative overflow-hidden rounded-sm mb-3"
-              style={{
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border-light)",
-                aspectRatio: "1",
-              }}
-            >
-              <img
-                src={data.images[activeImage]}
-                alt={data.title}
-                className="w-full h-full object-contain p-6 transition-all duration-500"
-                style={{ transform: "scale(1)" }}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "https://via.placeholder.com/600x600/131315/4a4a4e?text=FORMA";
-                }}
-              />
-              {data.discountPercentage > 5 && (
-                <div className="absolute top-4 left-4 discount-badge">
-                  −{Math.round(data.discountPercentage)}%
-                </div>
-              )}
-            </div>
+      {/* Main split */}
+      <div className="split-grid" style={{ borderBottom: "var(--rule)" }}>
 
-            {/* Thumbnails */}
-            {data.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {data.images.map((img: string, idx: number) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className="flex-none w-16 h-16 overflow-hidden rounded-sm transition-all"
-                    style={{
-                      border: `1px solid ${idx === activeImage ? "var(--accent)" : "var(--border-light)"}`,
-                      background: "var(--bg-elevated)",
-                    }}
-                  >
-                    <img
-                      src={img}
-                      alt={`View ${idx + 1}`}
-                      className="w-full h-full object-contain p-1.5"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "https://via.placeholder.com/80x80/131315/4a4a4e?text=F";
-                      }}
-                    />
-                  </button>
-                ))}
+        {/* Gallery */}
+        <div className="pd-gallery">
+          <div className="pd-main-img" style={{
+            background: "var(--paper-3)",
+            height: "min(60vh, 520px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            borderBottom: "var(--rule-thin)", overflow: "hidden", position: "relative",
+          }}>
+            <img
+              src={data.images[activeImg]}
+              alt={data.title}
+              style={{ maxHeight: "85%", maxWidth: "85%", objectFit: "contain", filter: "contrast(1.06)", transition: "opacity 0.25s" }}
+              onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/600x600/ddd6c8/999?text=FORMA"; }}
+            />
+            {data.discountPercentage > 5 && (
+              <div className="disc-badge" style={{ position: "absolute", top: 16, left: 16 }}>
+                −{Math.round(data.discountPercentage)}%
               </div>
             )}
           </div>
 
-          {/* ── Info ── */}
-          <div className="flex flex-col gap-6">
-            {/* Category + brand */}
-            <div className="flex items-center gap-3">
-              <span
-                className="product-tag"
-                style={{
-                  background: "var(--bg-overlay)",
-                  border: "1px solid var(--border-light)",
-                  color: "var(--text-muted)",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  padding: "3px 10px",
-                  borderRadius: "2px",
-                }}
-              >
-                {data.category}
-              </span>
-              {data.brand && (
-                <span
-                  style={{
-                    fontSize: "0.7rem",
-                    color: "var(--text-muted)",
-                    letterSpacing: "0.1em",
-                  }}
-                >
-                  by {data.brand}
-                </span>
-              )}
-            </div>
-
-            {/* Title */}
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2rem, 4vw, 3.2rem)",
-                fontWeight: 300,
-                lineHeight: 1.1,
-                color: "var(--text-primary)",
-              }}
-            >
-              {data.title}
-            </h1>
-
-            {/* Rating */}
-            <div className="flex items-center gap-3">
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) =>
-                  s <= Math.round(data.rating) ? (
-                    <StarSolid key={s} className="w-3.5 h-3.5" style={{ color: "var(--accent)" }} />
-                  ) : (
-                    <StarIcon key={s} className="w-3.5 h-3.5" style={{ color: "var(--text-muted)" }} />
-                  )
-                )}
-              </div>
-              <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>
-                {data.rating.toFixed(1)} ({data.reviews?.length ?? 0} reviews)
-              </span>
-            </div>
-
-            {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "2.2rem",
-                  fontWeight: 300,
-                  color: "var(--text-primary)",
-                }}
-              >
-                ${data.price.toFixed(2)}
-              </span>
-              {discountedOriginal && (
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.3rem",
-                    color: "var(--text-muted)",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  ${discountedOriginal}
-                </span>
-              )}
-            </div>
-
-            {/* Divider */}
-            <div className="divider" />
-
-            {/* Description */}
-            <p
-              style={{
-                fontSize: "0.88rem",
-                color: "var(--text-secondary)",
-                lineHeight: 1.8,
-              }}
-            >
-              {data.description}
-            </p>
-
-            {/* Meta details */}
-            <div
-              className="grid grid-cols-2 gap-3 py-4"
-              style={{ borderTop: "1px solid var(--border-light)", borderBottom: "1px solid var(--border-light)" }}
-            >
-              {[
-                { label: "SKU", value: data.sku },
-                { label: "Weight", value: `${data.weight}g` },
-                { label: "Warranty", value: data.warrantyInformation },
-                { label: "Shipping", value: data.shippingInformation },
-              ].map((d) => (
-                <div key={d.label}>
-                  <p
-                    style={{
-                      fontSize: "0.63rem",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                      marginBottom: "3px",
-                    }}
-                  >
-                    {d.label}
-                  </p>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>{d.value}</p>
-                </div>
+          {/* Thumbnails */}
+          {data.images.length > 1 && (
+            <div className="flex flex-wrap" style={{ borderBottom: "var(--rule-thin)" }}>
+              {data.images.map((img: string, idx: number) => (
+                <button key={idx} onClick={() => setActiveImg(idx)} style={{
+                  width: 70, height: 70, flexShrink: 0,
+                  background: "var(--paper-3)", border: "none",
+                  borderRight: "var(--rule-thin)",
+                  borderBottom: idx === activeImg ? "3px solid var(--ink)" : "3px solid transparent",
+                  cursor: "pointer", padding: 6, transition: "border-color 0.15s",
+                }}>
+                  <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                </button>
               ))}
             </div>
-
-            {/* Stock */}
-            <div className="flex items-center gap-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full flex-none"
-                style={{ background: stockStatus.color }}
-              />
-              <span style={{ fontSize: "0.75rem", color: stockStatus.color, letterSpacing: "0.06em" }}>
-                {stockStatus.label}
-              </span>
-            </div>
-
-            {/* Add to cart */}
-            <ToastDemo open={toastOpen} setOpen={setToastOpen}>
-              <button
-                className="btn-primary w-full text-center justify-center gap-3 py-4"
-                onClick={() => {
-                  dispatch(addProduct(data));
-                  setToastOpen(true);
-                }}
-                style={{ fontSize: "0.78rem" }}
-              >
-                <ShoppingBagIcon className="size-4" />
-                Add to Cart — ${data.price.toFixed(2)}
-              </button>
-            </ToastDemo>
-
-            <p
-              style={{
-                fontSize: "0.72rem",
-                color: "var(--text-muted)",
-                textAlign: "center",
-                letterSpacing: "0.06em",
-              }}
-            >
-              {data.returnPolicy}
-            </p>
-          </div>
+          )}
         </div>
 
-        {/* Reviews */}
-        {data.reviews?.length > 0 && (
-          <div className="mt-20 pt-12" style={{ borderTop: "1px solid var(--border-light)" }}>
-            <p className="section-eyebrow mb-3">What People Say</p>
-            <h2
-              className="section-title mb-8"
-              style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
-            >
-              Customer Reviews
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.reviews.map((review: any, i: number) => (
-                <ReviewCard key={i} review={review} />
-              ))}
+        {/* Vertical rule */}
+        <div className="vr" style={{ background: "var(--ink)" }} />
+
+        {/* Info */}
+        <div className="pd-info flex flex-col gap-5" style={{ padding: P }}>
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="t-label">{data.category}</span>
+            {data.brand && (
+              <span style={{ fontFamily: "var(--fm)", fontSize: "0.62rem", color: "var(--ink-4)", letterSpacing: "0.08em" }}>by {data.brand}</span>
+            )}
+          </div>
+
+          <h1 style={{
+            fontFamily: "var(--fd)", fontWeight: 700,
+            fontSize: "clamp(1.6rem, 4vw, 3rem)", lineHeight: 1.05, color: "var(--ink)",
+          }}>
+            {data.title}
+          </h1>
+
+          <div style={{ fontFamily: "var(--fm)", fontSize: "0.72rem", color: "var(--ink-3)", letterSpacing: "0.06em" }}>
+            {"★".repeat(Math.round(data.rating))}{"☆".repeat(5 - Math.round(data.rating))}
+            <span style={{ marginLeft: 8 }}>{data.rating.toFixed(1)} ({data.reviews?.length ?? 0} reviews)</span>
+          </div>
+
+          {/* Price */}
+          <div style={{ borderTop: "var(--rule-thin)", paddingTop: "1rem" }}>
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <span style={{ fontFamily: "var(--fm)", fontSize: "clamp(1.5rem, 4vw, 2rem)", fontWeight: 500, letterSpacing: "0.02em" }}>
+                ${data.price.toFixed(2)}
+              </span>
+              {original && (
+                <span style={{ fontFamily: "var(--fm)", fontSize: "1.05rem", color: "var(--ink-4)", textDecoration: "line-through" }}>
+                  ${original}
+                </span>
+              )}
             </div>
           </div>
-        )}
+
+          <p style={{ fontFamily: "var(--fb)", fontSize: "clamp(0.82rem, 1.4vw, 0.88rem)", color: "var(--ink-2)", lineHeight: 1.85 }}>
+            {data.description}
+          </p>
+
+          {/* Meta grid */}
+          <div className="grid grid-cols-2" style={{ border: "var(--rule-thin)" }}>
+            {[
+              { l: "SKU",      v: data.sku },
+              { l: "Weight",   v: `${data.weight}g` },
+              { l: "Warranty", v: data.warrantyInformation },
+              { l: "Shipping", v: data.shippingInformation },
+            ].map((d, i) => (
+              <div key={d.l} style={{
+                padding: "clamp(8px, 1.5vw, 12px) clamp(10px, 2vw, 14px)",
+                borderRight: i % 2 === 0 ? "var(--rule-thin)" : "none",
+                borderBottom: i < 2 ? "var(--rule-thin)" : "none",
+              }}>
+                <div className="t-label" style={{ marginBottom: 3 }}>{d.l}</div>
+                <div style={{ fontFamily: "var(--fm)", fontSize: "clamp(0.7rem, 1.3vw, 0.76rem)", color: "var(--ink-2)", letterSpacing: "0.02em" }}>{d.v}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ fontFamily: "var(--fm)", fontSize: "0.68rem", letterSpacing: "0.1em", textTransform: "uppercase", color: stock.color }}>
+            ● {stock.label}
+          </div>
+
+          <ToastDemo open={toastOpen} setOpen={setToastOpen}>
+            <button className="btn-primary w-full justify-center py-4"
+              style={{ fontSize: "0.78rem" }}
+              onClick={() => { dispatch(addProduct(data)); setToastOpen(true); }}>
+              Add to Bag — ${data.price.toFixed(2)}
+            </button>
+          </ToastDemo>
+
+          <p style={{ fontFamily: "var(--fm)", fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-4)", textAlign: "center" }}>
+            {data.returnPolicy}
+          </p>
+        </div>
       </div>
+
+      {/* Reviews */}
+      {data.reviews?.length > 0 && (
+        <div style={{ borderBottom: "var(--rule)" }}>
+          <div className="flex items-baseline gap-4 flex-wrap"
+            style={{ padding: "14px clamp(16px, 3vw, 28px)", borderBottom: "var(--rule-thin)" }}>
+            <span className="t-label" style={{ color: "var(--rust)" }}>Testimonials</span>
+            <h2 className="t-section" style={{ fontSize: "clamp(1.5rem, 4vw, 2.8rem)" }}>Customer Reviews</h2>
+          </div>
+          <div className="grid md:grid-cols-3">
+            {data.reviews.map((r: any, i: number) => (
+              <div key={i} style={{
+                padding: "clamp(14px, 2.5vw, 22px)",
+                borderRight: "var(--rule-thin)",
+                borderBottom: "var(--rule-thin)",
+              }}>
+                <div style={{ fontFamily: "var(--fm)", fontSize: "0.72rem", color: "var(--rust)", marginBottom: 10, letterSpacing: "0.06em" }}>
+                  {"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}
+                </div>
+                <blockquote style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontSize: "clamp(0.9rem, 1.6vw, 1rem)", color: "var(--ink-2)", lineHeight: 1.7, marginBottom: 10 }}>
+                  "{r.comment}"
+                </blockquote>
+                <cite style={{ fontFamily: "var(--fm)", fontSize: "0.62rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-4)", fontStyle: "normal" }}>
+                  — {r.reviewerName}
+                </cite>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

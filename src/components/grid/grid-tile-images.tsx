@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 interface GridTileImageProps {
   imgSrc: string;
   title?: string;
@@ -10,10 +8,8 @@ interface GridTileImageProps {
   category?: string;
   discountPercentage?: number;
   label?: boolean;
-  position?: string;
-  id?: number;
+  index?: number;
   onQuickAdd?: () => void;
-  size?: number;
 }
 
 export default function GridTileImage({
@@ -24,14 +20,17 @@ export default function GridTileImage({
   category,
   discountPercentage,
   label = true,
+  index,
   onQuickAdd,
 }: GridTileImageProps) {
-  const originalPrice = price && discountPercentage
+  const original = price && discountPercentage
     ? (price / (1 - discountPercentage / 100)).toFixed(2)
     : null;
 
+  const idx = index !== undefined ? String(index + 1).padStart(2, "0") : null;
+
   return (
-    <div className="product-card w-full h-full">
+    <div className="product-card w-full h-full flex flex-col">
       {/* Image */}
       <div className="product-card-img-wrap">
         <img
@@ -40,61 +39,83 @@ export default function GridTileImage({
           className="product-card-img"
           loading="lazy"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x400/131315/4a4a4e?text=FORMA";
+            (e.target as HTMLImageElement).src =
+              "https://via.placeholder.com/400x400/ddd6c8/999?text=FORMA";
           }}
         />
-      </div>
-
-      {/* Overlay with quick add */}
-      {label && (
+        {/* Overlay */}
         <div className="product-card-overlay">
           {onQuickAdd && (
-            <button className="product-card-quick-btn" onClick={(e) => { e.preventDefault(); onQuickAdd(); }}>
-              Quick Add
+            <button
+              className="product-card-quick-btn"
+              onClick={(e) => { e.preventDefault(); onQuickAdd(); }}
+            >
+              Quick Add →
             </button>
           )}
         </div>
-      )}
+        {/* Discount */}
+        {discountPercentage && discountPercentage > 5 && (
+          <div className="disc-badge absolute top-3 left-3">
+            −{Math.round(discountPercentage)}%
+          </div>
+        )}
+      </div>
 
       {/* Info */}
       {label && title && (
-        <div className="p-3.5" style={{ borderTop: "1px solid var(--border-light)" }}>
-          {category && (
-            <p style={{ fontSize: "0.63rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "5px", fontFamily: "var(--font-body)" }}>
-              {category}
-            </p>
-          )}
+        <div className="p-3 flex flex-col gap-1.5" style={{ borderTop: "var(--rule-thin)" }}>
+          <div className="flex items-center justify-between">
+            {idx && (
+              <span className="prod-number">{idx} — {category}</span>
+            )}
+            {!idx && category && (
+              <span className="prod-number">{category}</span>
+            )}
+            {rating !== undefined && (
+              <span
+                style={{
+                  fontFamily: "var(--fm)",
+                  fontSize: "0.6rem",
+                  color: "var(--ink-4)",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                ★ {rating.toFixed(1)}
+              </span>
+            )}
+          </div>
+
           <p
             className="leading-tight line-clamp-1"
-            style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--text-primary)", fontWeight: 400 }}
+            style={{
+              fontFamily: "var(--fd)",
+              fontStyle: "italic",
+              fontSize: "1rem",
+              color: "var(--ink)",
+              fontWeight: 400,
+            }}
           >
             {title}
           </p>
-          {(price !== undefined) && (
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="price-display">${price.toFixed(2)}</span>
-              {originalPrice && (
-                <>
-                  <span className="price-original" style={{ color: "var(--text-muted)", textDecoration: "line-through", fontSize: "0.8rem" }}>
-                    ${originalPrice}
-                  </span>
-                  {discountPercentage && discountPercentage > 5 && (
-                    <span className="discount-badge">−{Math.round(discountPercentage)}%</span>
-                  )}
-                </>
+
+          {price !== undefined && (
+            <div className="flex items-center gap-2">
+              <span className="t-price" style={{ fontSize: "0.85rem", color: "var(--ink)" }}>
+                ${price.toFixed(2)}
+              </span>
+              {original && (
+                <span
+                  style={{
+                    fontFamily: "var(--fm)",
+                    fontSize: "0.75rem",
+                    color: "var(--ink-4)",
+                    textDecoration: "line-through",
+                  }}
+                >
+                  ${original}
+                </span>
               )}
-            </div>
-          )}
-          {rating !== undefined && (
-            <div className="flex items-center gap-1.5 mt-1.5">
-              <div className="flex gap-0.5">
-                {[1,2,3,4,5].map((s) => (
-                  <svg key={s} className="w-2.5 h-2.5" viewBox="0 0 20 20" fill={s <= Math.round(rating) ? "var(--accent)" : "none"} stroke="var(--accent)" strokeWidth="1.5">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{rating.toFixed(1)}</span>
             </div>
           )}
         </div>

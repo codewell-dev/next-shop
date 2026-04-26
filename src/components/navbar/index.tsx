@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import Search from "./search";
 import MobileMenu from "./mobile-menu";
 import { ProviderSheet } from "../provider-sheet";
@@ -10,83 +10,96 @@ import { getAllData } from "@/lib/slices/cartSlice";
 import { Menu } from "@/lib/interfaces";
 
 const MENU: Menu[] = [
-  { id: 1, path: "/search", title: "All" },
-  { id: 2, path: "/search/beauty", title: "Beauty" },
+  { id: 1, path: "/search",            title: "All" },
+  { id: 2, path: "/search/beauty",     title: "Beauty" },
   { id: 3, path: "/search/fragrances", title: "Fragrances" },
-  { id: 4, path: "/search/furniture", title: "Furniture" },
+  { id: 4, path: "/search/furniture",  title: "Furniture" },
+];
+
+const TICKER = [
+  "Free shipping on orders over $150",
+  "Handcrafted with intention",
+  "New arrivals every fortnight",
+  "Complimentary gift wrapping",
+  "Worldwide delivery in 5–10 days",
 ];
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
-  const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    dispatch(getAllData());
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  useEffect(() => { dispatch(getAllData()); }, []);
 
-  const cart = useAppSelector((state) => state.cart);
-  const totalPrice =
-    cart.length > 0
-      ? cart.reduce((a: number, b: any) => a + b.price * b.quantity, 0)
-      : 0;
+  const cart       = useAppSelector((s) => s.cart);
+  const totalPrice = cart.length > 0
+    ? cart.reduce((a: number, b: any) => a + b.price * b.quantity, 0)
+    : 0;
 
   return (
-    <header className="navbar" style={{ borderBottomColor: scrolled ? "var(--border)" : "var(--border-light)" }}>
+    <header className="navbar">
       {/* Ticker */}
-      <div className="ticker-bar">
+      <div className="ticker-wrap">
         <div className="ticker-track">
-          {[...Array(2)].map((_, idx) => (
-            <span key={idx} className="ticker-item">
-              Free shipping on orders over $150 <span className="ticker-sep">✦</span>
-              Handcrafted with intention <span className="ticker-sep">✦</span>
-              New arrivals every fortnight <span className="ticker-sep">✦</span>
-              Complimentary gift wrapping available <span className="ticker-sep">✦</span>
-              Worldwide delivery in 5–10 days <span className="ticker-sep">✦</span>
+          {[0, 1].map((rep) => (
+            <span key={rep} className="ticker-item">
+              {TICKER.map((t, i) => (
+                <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 36 }}>
+                  {t}<span className="ticker-sep">✦</span>
+                </span>
+              ))}
             </span>
           ))}
         </div>
       </div>
 
-      {/* Main nav */}
-      <nav className="flex items-center justify-between px-6 py-3.5 max-w-screen-2xl mx-auto">
-        {/* Mobile menu */}
-        <div className="block md:hidden">
+      {/* Nav row */}
+      <div className="page-wrap flex items-stretch" style={{ minHeight: 56 }}>
+
+        {/* Mobile menu trigger */}
+        <div className="flex items-center px-4 md:hidden" style={{ borderRight: "var(--rule-thin)" }}>
           <Suspense fallback={null}>
             <MobileMenu menu={MENU} />
           </Suspense>
         </div>
 
-        {/* Logo + links */}
-        <div className="flex items-center gap-10">
-          <Link href="/" className="navbar-logo">
-            FORMA
+        {/* Desktop: logo + links */}
+        <div className="hidden md:flex items-stretch">
+          <Link href="/" className="flex items-center px-6" style={{ borderRight: "var(--rule-thin)" }}>
+            <span style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontWeight: 700, fontSize: "1.45rem", letterSpacing: "-0.03em", color: "var(--ink)" }}>
+              FORMA
+            </span>
           </Link>
-          <ul className="hidden md:flex items-center gap-8">
+          <div className="flex items-stretch">
             {MENU.map((item) => (
-              <li key={item.id}>
-                <Link href={item.path} className="nav-link">
-                  {item.title}
-                </Link>
-              </li>
+              <Link key={item.id} href={item.path}
+                className="flex items-center px-5"
+                style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-3)", borderRight: "var(--rule-thin)", textDecoration: "none", transition: "color 0.15s, background 0.15s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "var(--ink)"; el.style.background = "var(--paper-2)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "var(--ink-3)"; el.style.background = "transparent"; }}
+              >
+                {item.title}
+              </Link>
             ))}
-          </ul>
+          </div>
         </div>
 
+        {/* Mobile: logo center */}
+        <Link href="/" className="flex items-center justify-center flex-1 px-4 md:hidden">
+          <span style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontWeight: 700, fontSize: "1.3rem", letterSpacing: "-0.03em", color: "var(--ink)" }}>
+            FORMA
+          </span>
+        </Link>
+
         {/* Right: search + cart */}
-        <div className="flex items-center gap-4">
-          <div className="hidden md:block">
+        <div className="flex items-stretch ml-auto">
+          <div className="nav-search hidden md:flex items-center px-4" style={{ borderLeft: "var(--rule-thin)" }}>
             <Search />
           </div>
-          <ProviderSheet
-            cart={cart}
-            totalPrice={totalPrice}
-            cartTotal={cart.length}
-          />
+          <div className="flex items-center px-4" style={{ borderLeft: "var(--rule-thin)" }}>
+            <ProviderSheet cart={cart} totalPrice={totalPrice} cartTotal={cart.length} />
+          </div>
         </div>
-      </nav>
+
+      </div>
     </header>
   );
 }

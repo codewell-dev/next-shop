@@ -6,20 +6,16 @@ import StoreProvider from "./StoreProvider";
 
 export const metadata: Metadata = {
   title: "FORMA — Objects of Intention",
-  description: "Premium lifestyle products, curated for those who value craft, quality, and design.",
+  description: "Premium lifestyle goods, curated for those who believe the things you own should reflect the life you want to live.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body>
         <StoreProvider>
           <Navbar />
-          <main className="pt-[65px]">
+          <main style={{ paddingTop: 92 }}>
             {children}
           </main>
           <Footer />

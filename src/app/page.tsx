@@ -5,287 +5,109 @@ import { ThreeItemGrid } from "@/components/grid/three-items";
 import Carousel from "@/components/carousel";
 import { useGetProductsQuery } from "@/lib/products";
 import Spinner from "@/components/spinner";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-
-const BRAND_STORY_STATS = [
-  { value: "2019", label: "Founded" },
-  { value: "40+", label: "Countries" },
-  { value: "12k+", label: "Happy Clients" },
-  { value: "100%", label: "Curated" },
-];
 
 const CATEGORIES = [
-  { name: "Beauty", path: "/search/beauty", description: "Ritual skincare & cosmetics" },
-  { name: "Fragrances", path: "/search/fragrances", description: "Olfactory art" },
-  { name: "Furniture", path: "/search/furniture", description: "Considered interiors" },
-  { name: "Groceries", path: "/search/groceries", description: "Artisan pantry" },
+  { name: "Beauty",     path: "/search/beauty",     num: "01", desc: "Ritual skincare & cosmetics" },
+  { name: "Fragrances", path: "/search/fragrances",  num: "02", desc: "Olfactory art" },
+  { name: "Furniture",  path: "/search/furniture",   num: "03", desc: "Considered interiors" },
+  { name: "Groceries",  path: "/search/groceries",   num: "04", desc: "Artisan pantry" },
 ];
 
-export default function Home() {
-  const { data: dataFeatured, isLoading: loadingFeatured } = useGetProductsQuery("3");
-  const { data: dataCarousel, isLoading: loadingCarousel } = useGetProductsQuery("16");
+const PILLARS = [
+  { num: "I",   title: "Intentional Sourcing",  body: "Every product hand-selected against strict quality and sustainability criteria." },
+  { num: "II",  title: "Minimal Packaging",     body: "100% recycled, plastic-free packaging. Because it matters." },
+  { num: "III", title: "Fair Pricing",           body: "Direct maker relationships ensure fair compensation throughout." },
+  { num: "IV",  title: "Lifetime Support",       body: "We stand behind everything we sell. If something goes wrong, we make it right." },
+];
 
-  if (loadingFeatured && loadingCarousel) return <Spinner />;
+const STATS = [
+  { v: "2019", l: "Founded" },
+  { v: "40+",  l: "Countries" },
+  { v: "12k+", l: "Clients" },
+  { v: "100%", l: "Curated" },
+];
+
+const P = "clamp(20px, 4vw, 56px)";
+
+export default function Home() {
+  const { data: featured, isLoading: l1 } = useGetProductsQuery("3");
+  const { data: carousel, isLoading: l2 } = useGetProductsQuery("16");
+
+  if (l1 && l2) return <Spinner />;
 
   return (
-    <div className="w-full">
-      {/* ── HERO ───────────────────────────────────────── */}
-      <section className="hero-section">
-        {/* Decorative circle */}
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-[45vw] h-[45vw] max-w-[600px] max-h-[600px] rounded-full pointer-events-none"
-          style={{
-            border: "1px solid var(--border-light)",
-            opacity: 0.4,
-            transform: "translate(30%, -50%)",
-          }}
-        />
-        <div
-          className="absolute right-0 top-1/2 w-[35vw] h-[35vw] max-w-[480px] max-h-[480px] rounded-full pointer-events-none"
-          style={{
-            border: "1px solid var(--border-light)",
-            opacity: 0.25,
-            transform: "translate(30%, -55%)",
-          }}
-        />
+    <div className="page-wrap">
 
-        <div className="max-w-screen-2xl mx-auto px-6 py-24 w-full">
-          <div className="max-w-3xl">
-            {/* Eyebrow */}
-            <div className="hero-badge animate-fade-up mb-8 inline-flex">
-              <span className="hero-badge-dot" />
-              New Collection — SS 2025
-            </div>
+      {/* ── HERO ─────────────────────────────────────── */}
+      <section style={{ borderBottom: "var(--rule)" }}>
+        <div className="split-grid" style={{ minHeight: "min(88vh, 780px)" }}>
 
-            {/* Main title */}
-            <h1 className="hero-title animate-fade-up animate-fade-up-2 mb-8">
-              Objects<br />
-              <em style={{ fontStyle: "italic", color: "var(--text-secondary)" }}>of</em>
-              <br />
-              Intention
-            </h1>
-
-            {/* Subtitle */}
-            <p className="hero-subtitle animate-fade-up animate-fade-up-3 mb-10 max-w-md" style={{ lineHeight: 1.8 }}>
-              Premium goods for those who believe the things you own<br className="hidden md:block" />
-              should reflect the life you want to live.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 animate-fade-up animate-fade-up-4">
-              <Link href="/search" className="btn-primary">
-                Shop Collection
-                <ArrowRightIcon className="size-3.5" />
-              </Link>
-              <Link href="#brand-story" className="btn-outline">
-                Our Story
-              </Link>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-10 animate-fade-up animate-fade-up-5" style={{ borderTop: "1px solid var(--border-light)" }}>
-            {BRAND_STORY_STATS.map((stat) => (
-              <div key={stat.label}>
-                <p
-                  className="mb-1"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                    color: "var(--text-primary)",
-                    fontWeight: 300,
-                  }}
-                >
-                  {stat.value}
-                </p>
-                <p className="section-eyebrow">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURED PRODUCTS ──────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--border-light)" }}>
-        <div className="max-w-screen-2xl mx-auto mb-10">
-          <p className="section-eyebrow mb-3">Featured</p>
-          <div className="flex items-end justify-between">
-            <h2
-              className="section-title"
-              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-            >
-              Editors' Picks
-            </h2>
-            <Link
-              href="/search"
-              className="hidden md:flex items-center gap-2 nav-link"
-              style={{ letterSpacing: "0.12em" }}
-            >
-              View All <ArrowRightIcon className="size-3" />
-            </Link>
-          </div>
-        </div>
-        <ThreeItemGrid items={dataFeatured?.products} />
-        <div className="max-w-screen-2xl mx-auto mt-6 flex md:hidden">
-          <Link href="/search" className="btn-outline w-full text-center">
-            View All Products
-          </Link>
-        </div>
-      </section>
-
-      {/* ── CATEGORY GRID ──────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--border-light)" }}>
-        <div className="max-w-screen-2xl mx-auto">
-          <p className="section-eyebrow mb-3">Explore</p>
-          <h2
-            className="section-title mb-10"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-          >
-            By Category
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {CATEGORIES.map((cat, i) => (
-              <Link
-                key={cat.name}
-                href={cat.path}
-                className={`group relative p-6 flex flex-col justify-end overflow-hidden animate-fade-up animate-fade-up-${i + 1}`}
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-light)",
-                  borderRadius: "3px",
-                  minHeight: "180px",
-                  transition: "border-color 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border-light)";
-                }}
-              >
-                {/* Subtle gradient accent */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: "radial-gradient(circle at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 60%)",
-                  }}
-                />
-                <div className="relative">
-                  <p
-                    style={{
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                      marginBottom: "6px",
-                      fontFamily: "var(--font-body)",
-                    }}
-                  >
-                    {cat.description}
-                  </p>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "1.5rem",
-                      color: "var(--text-primary)",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {cat.name}
-                  </h3>
-                </div>
-                <ArrowRightIcon
-                  className="absolute top-5 right-5 size-3.5 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5"
-                  style={{ color: "var(--accent)" }}
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── BRAND STORY ────────────────────────────────── */}
-      <section
-        id="brand-story"
-        className="py-24 px-4"
-        style={{ borderTop: "1px solid var(--border-light)" }}
-      >
-        <div className="max-w-screen-2xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            {/* Left: text */}
+          <div className="hero-left flex flex-col justify-between" style={{ padding: P }}>
             <div>
-              <p className="section-eyebrow mb-5">Our Philosophy</p>
-              <h2
-                className="section-title mb-8"
-                style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)", lineHeight: 1.1 }}
-              >
-                Craft meets<br />
-                <em style={{ fontStyle: "italic", color: "var(--text-secondary)" }}>considered</em>
-                <br />design
-              </h2>
-              <p
-                style={{
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.85,
-                  fontSize: "0.93rem",
-                  maxWidth: "480px",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                FORMA was founded on a single belief: the objects that fill your everyday life
-                should be chosen with the same care you'd give to anything important.
+              <div className="issue-tag fade-up" style={{ marginBottom: 28 }}>
+                № 001 — Objects of Intention
+              </div>
+              <h1 className="t-display fade-up fade-up-1" style={{
+                fontSize: "clamp(3rem, 10vw, 9rem)",
+                marginBottom: 32,
+              }}>
+                Things<br />worth<br />owning.
+              </h1>
+            </div>
+            <div className="fade-up fade-up-2">
+              <p style={{
+                fontFamily: "var(--fb)", fontSize: "clamp(0.85rem, 1.5vw, 0.95rem)",
+                color: "var(--ink-3)", lineHeight: 1.85,
+                maxWidth: 400, marginBottom: 24,
+              }}>
+                We source from independent makers and heritage brands who share
+                our obsession with materials, longevity, and restraint.
               </p>
-              <p
-                style={{
-                  color: "var(--text-muted)",
-                  lineHeight: 1.85,
-                  fontSize: "0.88rem",
-                  maxWidth: "460px",
-                  marginBottom: "2.5rem",
-                }}
-              >
-                We source from independent makers, heritage brands, and emerging designers
-                who share our obsession with materials, longevity, and restraint.
-              </p>
-              <Link href="/search" className="btn-primary inline-flex">
-                Shop Now <ArrowRightIcon className="size-3.5" />
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/search" className="btn-primary">Shop Collection →</Link>
+                <Link href="#brand-story" className="btn-outline">Our Story</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="vr" style={{ background: "var(--ink)" }} />
+
+          <div className="hero-right flex flex-col">
+            <div className="hero-right-top flex-1 flex flex-col justify-end gap-5"
+              style={{ padding: P, borderBottom: "var(--rule)" }}>
+              <div>
+                <div className="t-label mb-2" style={{ color: "var(--rust)" }}>New Collection</div>
+                <div style={{
+                  fontFamily: "var(--fm)", fontSize: "0.72rem",
+                  color: "var(--ink-3)", lineHeight: 1.9, letterSpacing: "0.04em",
+                }}>
+                  Spring · Summer 2025<br />Premium lifestyle goods<br />Curated for the intentional
+                </div>
+              </div>
+              <blockquote style={{
+                fontFamily: "var(--fd)", fontStyle: "italic",
+                fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)",
+                color: "var(--ink-2)", lineHeight: 1.55,
+                borderLeft: "3px solid var(--rust)", paddingLeft: "1rem", maxWidth: 320,
+              }}>
+                "The things you own, end up owning you — unless you choose them wisely."
+              </blockquote>
             </div>
 
-            {/* Right: manifesto grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { title: "Intentional Sourcing", body: "Every product is hand-selected against strict criteria for quality and sustainability." },
-                { title: "Minimal Packaging", body: "We ship in 100% recycled, plastic-free packaging. Because it matters." },
-                { title: "Fair Pricing", body: "We work directly with makers to ensure fair compensation throughout the supply chain." },
-                { title: "Lifetime Support", body: "We stand behind everything we sell. If something goes wrong, we make it right." },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="p-5"
-                  style={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border-light)",
-                    borderRadius: "3px",
-                  }}
-                >
-                  <div
-                    className="mb-3"
-                    style={{ width: "28px", height: "1px", background: "var(--accent)" }}
-                  />
-                  <h4
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "1.05rem",
-                      color: "var(--text-primary)",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {item.title}
-                  </h4>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                    {item.body}
-                  </p>
+            <div className="hero-stats grid grid-cols-2">
+              {STATS.map((s, i) => (
+                <div key={s.l} style={{
+                  padding: "clamp(12px, 2vw, 22px) clamp(14px, 2.5vw, 26px)",
+                  borderTop: "var(--rule)",
+                  borderRight: i % 2 === 0 ? "var(--rule-thin)" : "none",
+                  borderBottom: i < 2 ? "var(--rule-thin)" : "none",
+                }}>
+                  <div style={{
+                    fontFamily: "var(--fm)",
+                    fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
+                    fontWeight: 500, lineHeight: 1, marginBottom: 4,
+                  }}>{s.v}</div>
+                  <div className="t-label">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -293,57 +115,132 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CAROUSEL ───────────────────────────────────── */}
-      <Carousel items={dataCarousel?.products} />
+      {/* ── FEATURED ─────────────────────────────────── */}
+      <section style={{ borderTop: "var(--rule)" }}>
+        <div className="flex items-baseline justify-between flex-wrap gap-3"
+          style={{ padding: "14px clamp(16px, 3vw, 28px)", borderBottom: "var(--rule-thin)" }}>
+          <div className="flex items-baseline gap-4 flex-wrap">
+            <span className="t-label" style={{ color: "var(--rust)" }}>Featured</span>
+            <h2 className="t-section" style={{ fontSize: "clamp(1.5rem, 4vw, 2.8rem)" }}>Editors' Picks</h2>
+          </div>
+          <Link href="/search" style={{
+            fontFamily: "var(--fm)", fontSize: "0.65rem",
+            letterSpacing: "0.12em", textTransform: "uppercase",
+            color: "var(--ink-3)", textDecoration: "none", whiteSpace: "nowrap",
+          }}>View all →</Link>
+        </div>
+        <ThreeItemGrid items={featured?.products} />
+      </section>
 
-      {/* ── NEWSLETTER ─────────────────────────────────── */}
-      <section
-        className="py-20 px-4"
-        style={{ borderTop: "1px solid var(--border-light)", borderBottom: "1px solid var(--border-light)" }}
-      >
-        <div className="max-w-screen-2xl mx-auto text-center">
-          <p className="section-eyebrow mb-4">Stay Informed</p>
-          <h2
-            className="section-title mb-4"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-          >
-            The FORMA Edit
-          </h2>
-          <p
-            style={{
-              color: "var(--text-secondary)",
-              fontSize: "0.88rem",
-              marginBottom: "2.5rem",
-              letterSpacing: "0.02em",
-            }}
-          >
-            New arrivals, behind-the-scenes stories, and curated reading — direct to your inbox.
-          </p>
-          <form
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 px-4 py-3 text-sm outline-none rounded-sm"
+      {/* ── CATEGORIES ───────────────────────────────── */}
+      <section style={{ borderTop: "var(--rule)" }}>
+        <div className="flex items-baseline gap-4 flex-wrap"
+          style={{ padding: "14px clamp(16px, 3vw, 28px)", borderBottom: "var(--rule-thin)" }}>
+          <span className="t-label" style={{ color: "var(--rust)" }}>Browse</span>
+          <h2 className="t-section" style={{ fontSize: "clamp(1.5rem, 4vw, 2.8rem)" }}>By Category</h2>
+        </div>
+        <div className="cat-grid" style={{ borderBottom: "var(--rule)" }}>
+          {CATEGORIES.map((cat, i) => (
+            <Link key={cat.name} href={cat.path} className="cat"
               style={{
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border)",
-                color: "var(--text-primary)",
-                fontFamily: "var(--font-body)",
-                letterSpacing: "0.02em",
+                borderRight: i < 3 ? "var(--rule-thin)" : "none",
+                textDecoration: "none", color: "inherit",
+                minHeight: "clamp(100px, 14vw, 170px)",
+                display: "flex", flexDirection: "column", justifyContent: "space-between",
+                padding: "clamp(14px, 2.5vw, 22px)",
+                transition: "background 0.15s",
               }}
-            />
-            <button type="submit" className="btn-primary whitespace-nowrap">
-              Subscribe
-            </button>
-          </form>
-          <p style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: "1rem", letterSpacing: "0.08em" }}>
-            No spam. Unsubscribe at any time.
-          </p>
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--paper-2)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "")}
+            >
+              <span style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-4)" }}>
+                {cat.num}
+              </span>
+              <div>
+                <div style={{ fontFamily: "var(--fm)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 5 }}>
+                  {cat.desc}
+                </div>
+                <h3 style={{ fontFamily: "var(--fd)", fontStyle: "italic", fontWeight: 700, fontSize: "clamp(1.15rem, 3vw, 1.6rem)", letterSpacing: "-0.02em" }}>
+                  {cat.name} →
+                </h3>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
+
+      {/* ── BRAND STORY ──────────────────────────────── */}
+      <section id="brand-story" style={{ borderBottom: "var(--rule)" }}>
+        <div className="flex items-baseline gap-4 flex-wrap"
+          style={{ padding: "14px clamp(16px, 3vw, 28px)", borderBottom: "var(--rule-thin)" }}>
+          <span className="t-label" style={{ color: "var(--rust)" }}>Our Philosophy</span>
+          <h2 className="t-section" style={{ fontSize: "clamp(1.4rem, 4vw, 2.8rem)" }}>Craft meets considered design</h2>
+        </div>
+
+        <div className="split-grid">
+          <div style={{ padding: P }}>
+            <p style={{ fontFamily: "var(--fb)", fontSize: "clamp(0.85rem, 1.5vw, 0.92rem)", color: "var(--ink-2)", lineHeight: 1.9, marginBottom: "1.2rem", maxWidth: 480 }}>
+              FORMA was founded on a single belief: the objects that fill your everyday life
+              should be chosen with the same care you'd give to anything important.
+            </p>
+            <p style={{ fontFamily: "var(--fb)", fontSize: "clamp(0.82rem, 1.4vw, 0.88rem)", color: "var(--ink-3)", lineHeight: 1.9, marginBottom: "2rem", maxWidth: 460 }}>
+              We source from independent makers, heritage brands, and emerging designers
+              who share our obsession with materials, longevity, and restraint.
+            </p>
+            <Link href="/search" className="btn-primary">Shop Now →</Link>
+          </div>
+
+          <div className="vr" style={{ background: "var(--ink)" }} />
+
+          <div className="pillars-grid">
+            {PILLARS.map((p, i) => (
+              <div key={p.num} className="pillar" style={{
+                padding: "clamp(14px, 2.5vw, 22px)",
+                borderBottom: i < 2 ? "var(--rule-thin)" : "none",
+                borderRight: i % 2 === 0 ? "var(--rule-thin)" : "none",
+              }}>
+                <div style={{ fontFamily: "var(--fm)", fontSize: "0.75rem", color: "var(--rust)", marginBottom: 8, fontWeight: 500 }}>{p.num}.</div>
+                <h4 style={{ fontFamily: "var(--fd)", fontWeight: 700, fontSize: "clamp(0.9rem, 1.8vw, 1rem)", color: "var(--ink)", marginBottom: 7, lineHeight: 1.2 }}>{p.title}</h4>
+                <p style={{ fontFamily: "var(--fb)", fontSize: "clamp(0.75rem, 1.3vw, 0.8rem)", color: "var(--ink-3)", lineHeight: 1.75 }}>{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CAROUSEL ─────────────────────────────────── */}
+      <Carousel items={carousel?.products} />
+
+      {/* ── NEWSLETTER ───────────────────────────────── */}
+      <section style={{ borderTop: "var(--rule)", borderBottom: "var(--rule)" }}>
+        <div className="split-grid">
+          <div className="newsletter-left flex flex-col justify-center" style={{ padding: P }}>
+            <span className="t-label mb-3" style={{ color: "var(--rust)" }}>Stay Informed</span>
+            <h2 className="t-section" style={{ fontSize: "clamp(1.8rem, 5vw, 3.5rem)", marginBottom: 14 }}>
+              The FORMA Edit
+            </h2>
+            <p style={{ fontFamily: "var(--fb)", fontSize: "clamp(0.82rem, 1.4vw, 0.88rem)", color: "var(--ink-3)", lineHeight: 1.85, maxWidth: 360 }}>
+              New arrivals, behind-the-scenes stories, and curated reading — direct to your inbox.
+            </p>
+          </div>
+          <div className="vr" style={{ background: "var(--ink)" }} />
+          <div className="newsletter-right flex flex-col justify-center gap-5" style={{ padding: P }}>
+            <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+              <input type="email" placeholder="your@email.com" style={{
+                background: "var(--paper-2)", border: "var(--rule-thin)",
+                padding: "12px 16px", fontFamily: "var(--fm)",
+                fontSize: "0.78rem", letterSpacing: "0.04em",
+                color: "var(--ink)", outline: "none", width: "100%",
+              }} />
+              <button type="submit" className="btn-primary">Subscribe →</button>
+            </form>
+            <p style={{ fontFamily: "var(--fm)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-4)" }}>
+              No spam. Unsubscribe at any time.
+            </p>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

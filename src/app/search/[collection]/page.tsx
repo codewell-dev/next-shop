@@ -8,84 +8,88 @@ import { useAppDispatch } from "@/lib/hooks";
 import { addProduct } from "@/lib/slices/cartSlice";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
 
 export default function CollectionPage() {
   const dispatch = useAppDispatch();
   const { collection } = useParams<{ collection: string }>();
-  const displayName = collection
+  const display = collection
     ? collection.charAt(0).toUpperCase() + collection.slice(1)
     : "";
 
   const { data, isLoading } = useGetCategoryByNameQuery<{
-    data: Products;
-    error: string;
-    isLoading: boolean;
+    data: Products; error: string; isLoading: boolean;
   }>(collection);
 
   return (
-    <div className="min-h-screen">
-      <div
-        className="py-16 px-6 border-b"
-        style={{
-          borderColor: "var(--border-light)",
-          background:
-            "radial-gradient(ellipse 60% 80% at 50% 0%, rgba(201,169,110,0.04) 0%, transparent 70%)",
-        }}
-      >
-        <div className="max-w-screen-2xl mx-auto">
-          <p className="section-eyebrow mb-3">Collection</p>
+    <div className="page-wrap">
+      {/* Header */}
+      <div style={{ borderBottom: "var(--rule)" }}>
+        <div className="px-6 py-10">
+          <div className="issue-tag mb-4">Collection — {display}</div>
           <h1
-            className="section-title"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+            className="t-display"
+            style={{ fontSize: "clamp(3rem, 9vw, 7rem)" }}
           >
-            {displayName}
+            {display}
           </h1>
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-6 py-8">
-        <div
-          className="flex items-center justify-between mb-8 pb-6"
-          style={{ borderBottom: "1px solid var(--border-light)" }}
+      {/* Toolbar */}
+      <div
+        className="flex items-center justify-between px-6 py-3"
+        style={{ borderBottom: "var(--rule-thin)" }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--fm)",
+            fontSize: "0.68rem",
+            letterSpacing: "0.08em",
+            color: "var(--ink-4)",
+          }}
         >
-          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}>
-            {data?.products?.length ?? 0} products in {displayName}
-          </p>
-          <Link
-            href="/search"
-            className="nav-link"
-            style={{ fontSize: "0.72rem" }}
-          >
-            ← All Products
-          </Link>
-        </div>
-
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div className="products-grid">
-            {data?.products?.map((product: Product, i: number) => (
-              <Link
-                href={`/product/${product.id}`}
-                key={product.id}
-                className="block animate-fade-up"
-                style={{ animationDelay: `${Math.min(i * 0.05, 0.5)}s` }}
-              >
-                <GridTileImage
-                  imgSrc={product.images[0]}
-                  title={product.title}
-                  price={product.price}
-                  rating={product.rating}
-                  category={product.category}
-                  discountPercentage={product.discountPercentage}
-                  onQuickAdd={() => dispatch(addProduct(product))}
-                />
-              </Link>
-            ))}
-          </div>
-        )}
+          {data?.products?.length ?? 0} items in {display}
+        </span>
+        <Link
+          href="/search"
+          style={{
+            fontFamily: "var(--fm)",
+            fontSize: "0.65rem",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "var(--ink-3)",
+            textDecoration: "none",
+          }}
+        >
+          ← All Products
+        </Link>
       </div>
+
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="products-grid">
+          {data?.products?.map((product: Product, i: number) => (
+            <Link
+              href={`/product/${product.id}`}
+              key={product.id}
+              className="block fade-up"
+              style={{ animationDelay: `${Math.min(i * 0.04, 0.5)}s` }}
+            >
+              <GridTileImage
+                imgSrc={product.images[0]}
+                title={product.title}
+                price={product.price}
+                rating={product.rating}
+                category={product.category}
+                discountPercentage={product.discountPercentage}
+                index={i}
+                onQuickAdd={() => dispatch(addProduct(product))}
+              />
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
